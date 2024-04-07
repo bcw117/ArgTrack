@@ -8,7 +8,7 @@ import {
   ScrollView,
   TextInput,
 } from "react-native";
-import { db } from "../../firebaseConfig";
+import { db } from "firebaseConfig";
 import {
   collection,
   deleteDoc,
@@ -16,6 +16,7 @@ import {
   getDocs,
   updateDoc,
 } from "firebase/firestore";
+import ArgumentLog from "@components/ArgumentLog";
 
 const HistoryScreen = () => {
   const [logs, setLogs] = useState([]);
@@ -68,48 +69,18 @@ const HistoryScreen = () => {
   };
 
   return (
-    <SafeAreaView style={history.container}>
-      <Text style={history.title}>History</Text>
-      <ScrollView style={history.inner}>
+    <SafeAreaView style={styles.container}>
+      <Text style={styles.title}>History</Text>
+      <ScrollView style={styles.inner}>
         {logs.map((item, key) => {
           return (
-            <View style={[history.logContainer, history.shadowProp]} key={key}>
-              <Text style={{ fontFamily: "SourceSansPro-Bold" }}>Reason:</Text>
-              <TextInput
-                style={{
-                  fontFamily: "SourceSansPro-Regular",
-                  marginVertical: 5,
-                }}
-                color="black"
-                defaultValue={item.reason}
-                multiline={true}
-                onChangeText={(text) => setUpdatedText(text)}
-              ></TextInput>
-              <Text
-                style={{ fontFamily: "SourceSansPro-Bold", marginVertical: 5 }}
-              >
-                Date:
-              </Text>
-              <Text
-                style={{ fontFamily: "SourceSansPro-Regular", marginBottom: 3 }}
-              >
-                {item.date.toDate().toDateString()}
-              </Text>
-              <View style={{ flexDirection: "row" }}>
-                <Pressable
-                  style={history.button}
-                  onPress={() => updateLog(item.id)}
-                >
-                  <Text style={{ color: "white" }}>Update Log</Text>
-                </Pressable>
-                <Pressable
-                  style={history.button}
-                  onPress={() => deleteLog(item.id)}
-                >
-                  <Text style={{ color: "white" }}>Delete Log</Text>
-                </Pressable>
-              </View>
-            </View>
+            <ArgumentLog
+              item={item}
+              key={key}
+              setUpdatedText={setUpdatedText}
+              updateLog={updateLog}
+              deleteLog={deleteLog}
+            />
           );
         })}
       </ScrollView>
@@ -117,7 +88,7 @@ const HistoryScreen = () => {
   );
 };
 
-const history = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",

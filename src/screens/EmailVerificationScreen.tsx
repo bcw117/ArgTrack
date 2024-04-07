@@ -10,12 +10,12 @@ import {
   SafeAreaView,
   KeyboardAvoidingView,
 } from "react-native";
-import { auth } from "../../firebaseConfig";
+import { auth } from "firebaseConfig";
 import { sendEmailVerification, reload } from "firebase/auth";
 
 const EmailVerification = ({ navigation }) => {
   const resendEmail = () => {
-    sendEmailVerification().then(() => {
+    sendEmailVerification(auth.currentUser).then(() => {
       alert("Email sent");
     });
   };

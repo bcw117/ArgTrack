@@ -8,10 +8,9 @@ import {
   KeyboardAvoidingView,
   TextInput,
 } from "react-native";
-import { auth } from "../../firebaseConfig";
+import { auth, db } from "../../firebaseConfig";
 import { signOut } from "firebase/auth";
 import { getDoc, doc } from "firebase/firestore";
-import { db } from "../../firebaseConfig";
 
 const AccountScreen = ({ navigation }) => {
   const [name, setName] = useState("");

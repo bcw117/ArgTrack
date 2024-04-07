@@ -26,6 +26,10 @@ export default {
     web: {
       favicon: "./assets/favicon.png",
     },
+    experiments: {
+      typedRoutes: true,
+      tsconfigPaths: true,
+    },
     extra: {
       apiKey: process.env.API_KEY,
       authDomain: process.env.AUTH_DOMAIN,

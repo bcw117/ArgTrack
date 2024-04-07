@@ -8,15 +8,14 @@ import {
   SafeAreaView,
   KeyboardAvoidingView,
 } from "react-native";
-import { auth } from "../../firebaseConfig";
 import {
   updateEmail,
   reauthenticateWithCredential,
   EmailAuthProvider,
 } from "firebase/auth";
-import { db } from "../../firebaseConfig";
+import { auth, db } from "firebaseConfig";
 import { updateDoc, doc } from "firebase/firestore";
-import BackButton from "../components/BackButton";
+import BackButton from "@components/BackButton";
 import { FirebaseError } from "firebase/app";
 
 const ChangeEmailScreen = ({ navigation }) => {

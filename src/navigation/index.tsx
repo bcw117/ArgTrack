@@ -11,7 +11,7 @@ import { onIdTokenChanged, reload } from "firebase/auth";
 
 const RootNavigation = () => {
   // Get state variables to check if user is signed in or not
-  const [user, setUser] = useState();
+  const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isVerified, setIsVerified] = useState(false);
 

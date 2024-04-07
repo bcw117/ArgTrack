@@ -16,7 +16,7 @@ import {
   updatePassword,
 } from "firebase/auth";
 
-import BackButton from "../components/BackButton";
+import BackButton from "@components/BackButton";
 
 const ChangePasswordScreen = ({ navigation }) => {
   const [prevPass, setPrevPass] = useState("");

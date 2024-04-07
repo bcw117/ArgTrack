@@ -11,8 +11,8 @@ import {
 } from "react-native";
 import moment from "moment";
 import { Calendar } from "react-native-calendars";
-import { auth } from "../../firebaseConfig";
-import { db } from "../../firebaseConfig";
+import { auth } from "firebaseConfig";
+import { db } from "firebaseConfig";
 import { addDoc, collection } from "firebase/firestore";
 import { KeyboardAvoidingView } from "react-native";
 
@@ -75,7 +75,7 @@ const CalendarScreen = () => {
               [date]: {
                 selected: true,
                 disableTouchEvent: true,
-                selectedDotColor: "orange",
+                selectedColor: "orange",
               },
             }}
           />
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   calendarContainer: {
-    alignItems: "left",
+    alignItems: "flex-start",
     width: "100%",
   },
   textBoxContainer: {
