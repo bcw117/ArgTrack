@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from "react";
 import {
-  View,
   StyleSheet,
   Text,
   SafeAreaView,
-  Pressable,
   ScrollView,
-  TextInput,
+  Alert,
 } from "react-native";
 import { db } from "firebaseConfig";
 import {
@@ -35,16 +33,17 @@ const HistoryScreen = () => {
       .catch((error) => {
         alert(error);
       });
-  }, []);
+  });
 
   const deleteLog = (id) => {
     deleteDoc(doc(db, "fightLog", id))
       .then(() => {
         let existingLogs = [...logs].filter((log) => log.id !== id);
         setLogs(existingLogs);
+        Alert.alert("Log has been deleted");
       })
       .catch((error) => {
-        alert(error);
+        Alert.alert("There was an error deleting that log");
       });
   };
 
@@ -61,9 +60,10 @@ const HistoryScreen = () => {
           existingLogs[updateIndex].reason = updatedText;
           setLogs(existingLogs);
           setUpdatedText(undefined);
+          Alert.alert("Log has been updated");
         })
         .catch((error) => {
-          alert(error);
+          Alert.alert("There was an error updating that log");
         });
     }
   };
@@ -76,7 +76,7 @@ const HistoryScreen = () => {
           return (
             <ArgumentLog
               item={item}
-              uKey={key}
+              key={key}
               setUpdatedText={setUpdatedText}
               updateLog={updateLog}
               deleteLog={deleteLog}

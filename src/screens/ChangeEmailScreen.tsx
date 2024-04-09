@@ -15,8 +15,6 @@ import {
 } from "firebase/auth";
 import { auth, db } from "firebaseConfig";
 import { updateDoc, doc } from "firebase/firestore";
-import BackButton from "@components/BackButton";
-import { FirebaseError } from "firebase/app";
 
 const ChangeEmailScreen = ({ navigation }) => {
   const [newEmail, setEmail] = useState("");
@@ -24,6 +22,7 @@ const ChangeEmailScreen = ({ navigation }) => {
 
   const changeEmail = async () => {
     if (newEmail === auth.currentUser.email || newEmail === "") {
+      console.log("worked");
       return Alert.alert("Error", "Invalid Email");
     }
     const credentials = EmailAuthProvider.credential(
@@ -56,7 +55,6 @@ const ChangeEmailScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <BackButton navigation={navigation}></BackButton>
       <KeyboardAvoidingView behavior="position">
         <Text style={styles.title}>Change your Email</Text>
         <TextInput
@@ -86,6 +84,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
   title: {
+    fontFamily: "SourceSansPro-Bold",
     fontWeight: "bold",
     textAlign: "center",
     fontSize: 30,

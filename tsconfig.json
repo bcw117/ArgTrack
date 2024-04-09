@@ -2,22 +2,12 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@components/*": [
-        "src/components/*"
-      ],
-      "@assets/*": [
-        "assets/*"
-      ],
-      "@/*": [
-        "src/*"
-      ]
+      "@components/*": ["src/components/*"],
+      "@assets/*": ["assets/*"],
+      "@screens/*": ["src/screens/*"],
+      "@/*": ["src/*"]
     }
   },
   "extends": "expo/tsconfig.base",
-  "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    ".expo/types/**/*.ts",
-    "expo-env.d.ts"
-  ]
+  "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"]
 }

@@ -8,6 +8,7 @@ import {
   SafeAreaView,
   Keyboard,
   ScrollView,
+  Alert,
   Dimensions,
 } from "react-native";
 import moment from "moment";
@@ -28,7 +29,7 @@ const CalendarScreen = () => {
     );
 
     if (!text || !date) {
-      return alert("You have not entered a valid reason/date");
+      return Alert.alert("You have not entered a valid reason/date");
     }
 
     addDoc(collection(db, "fightLog"), {
@@ -38,10 +39,10 @@ const CalendarScreen = () => {
     })
       .then(() => {
         setText("");
-        alert("Record Successfully Logged!");
+        Alert.alert("Record Successfully Logged!");
       })
       .catch((error) => {
-        alert(error);
+        Alert.alert(error);
       });
   };
 

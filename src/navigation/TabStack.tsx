@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { NavigationContainer } from "@react-navigation/native";
+import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import HomeScreen from "../screens/HomeScreen";
@@ -7,8 +6,7 @@ import HistoryScreen from "../screens/HistoryScreen";
 import CalendarScreen from "../screens/CalendarScreen";
 import AccountScreen from "../screens/AccountScreen";
 
-import { Feather } from "@expo/vector-icons";
-import { MaterialIcons } from "@expo/vector-icons";
+import { Feather, MaterialIcons } from "@expo/vector-icons";
 
 // Create a stack for screens when user is logged in
 const Tab = createBottomTabNavigator();

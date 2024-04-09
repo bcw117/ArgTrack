@@ -9,14 +9,12 @@ import {
   KeyboardAvoidingView,
   Alert,
 } from "react-native";
-import { auth } from "../../firebaseConfig";
+import { auth } from "firebaseConfig";
 import {
   reauthenticateWithCredential,
   EmailAuthProvider,
   updatePassword,
 } from "firebase/auth";
-
-import BackButton from "@components/BackButton";
 
 const ChangePasswordScreen = ({ navigation }) => {
   const [prevPass, setPrevPass] = useState("");
@@ -62,7 +60,6 @@ const ChangePasswordScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <BackButton navigation={navigation}></BackButton>
       <KeyboardAvoidingView behavior="position">
         <Text style={styles.title}>Change your Password</Text>
         <View style={styles.inputContainer}>
@@ -101,6 +98,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   title: {
+    fontFamily: "SourceSansPro-Bold",
     fontWeight: "bold",
     textAlign: "center",
     fontSize: 30,
