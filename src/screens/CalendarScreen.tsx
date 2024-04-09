@@ -8,11 +8,11 @@ import {
   SafeAreaView,
   Keyboard,
   ScrollView,
+  Dimensions,
 } from "react-native";
 import moment from "moment";
 import { Calendar } from "react-native-calendars";
-import { auth } from "firebaseConfig";
-import { db } from "firebaseConfig";
+import { auth, db } from "firebaseConfig";
 import { addDoc, collection } from "firebase/firestore";
 import { KeyboardAvoidingView } from "react-native";
 
@@ -56,17 +56,15 @@ const CalendarScreen = () => {
         <View style={styles.calendarContainer}>
           <Calendar
             style={{
-              borderRadius: 5,
-              padding: 10,
-              borderTopColor: "gray",
-              borderBottomColor: "gray",
-              borderWidth: 1,
-              height: 375,
-              width: 375,
+              paddingVertical: 20,
+              width: Dimensions.get("window").width,
             }}
             theme={{
-              calendarBackground: "white",
-              dayTextColor: "gray",
+              calendarBackground: "#222",
+              dayTextColor: "#fff",
+              monthTextColor: "#fff",
+              textMonthFontWeight: "bold",
+              textDisabledColor: "#444",
             }}
             onDayPress={(day) => {
               setDate(moment(day.dateString).format("YYYY-MM-DD"));
@@ -75,7 +73,7 @@ const CalendarScreen = () => {
               [date]: {
                 selected: true,
                 disableTouchEvent: true,
-                selectedColor: "orange",
+                selectedColor: "blue",
               },
             }}
           />

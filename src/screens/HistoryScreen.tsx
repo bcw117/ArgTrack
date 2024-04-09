@@ -76,7 +76,7 @@ const HistoryScreen = () => {
           return (
             <ArgumentLog
               item={item}
-              key={key}
+              uKey={key}
               setUpdatedText={setUpdatedText}
               updateLog={updateLog}
               deleteLog={deleteLog}

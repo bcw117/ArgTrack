@@ -3,14 +3,15 @@ import {
   StyleSheet,
   Text,
   View,
+  Alert,
   Pressable,
   SafeAreaView,
   KeyboardAvoidingView,
   TextInput,
 } from "react-native";
 import { auth, db } from "../../firebaseConfig";
-import { signOut } from "firebase/auth";
-import { getDoc, doc } from "firebase/firestore";
+import { signOut, updateProfile } from "firebase/auth";
+import { getDoc, setDoc, doc } from "firebase/firestore";
 
 const AccountScreen = ({ navigation }) => {
   const [name, setName] = useState("");
@@ -40,6 +41,21 @@ const AccountScreen = ({ navigation }) => {
       });
   };
 
+  const changeUserData = () => {
+    setDoc(
+      doc(db, "users", auth.currentUser.uid),
+      {
+        name: name,
+      },
+      { merge: true }
+    );
+    updateProfile(auth.currentUser, {
+      displayName: username,
+    });
+
+    Alert.alert("Success", "Your changes have been saved!");
+  };
+
   useEffect(() => {
     getUserData();
   }, []);
@@ -50,11 +66,21 @@ const AccountScreen = ({ navigation }) => {
         <Text style={styles.title}>Account</Text>
         <View style={styles.inner}>
           <Text style={styles.field}>Name: </Text>
-          <TextInput style={styles.input}>{name}</TextInput>
+          <TextInput
+            style={styles.input}
+            onChangeText={(text) => setName(text)}
+          >
+            {name}
+          </TextInput>
         </View>
         <View style={styles.inner}>
           <Text style={styles.field}>Username: </Text>
-          <TextInput style={styles.input}>{username}</TextInput>
+          <TextInput
+            style={styles.input}
+            onChangeText={(text) => setUserName(text)}
+          >
+            {username}
+          </TextInput>
         </View>
         <View style={styles.inner}>
           <Text style={styles.field}>Email: </Text>
@@ -103,6 +129,9 @@ const AccountScreen = ({ navigation }) => {
             onPress={() => navigation.navigate("ChangeEmail")}
           >
             <Text style={styles.buttonText}>Change Email</Text>
+          </Pressable>
+          <Pressable style={styles.button} onPress={() => changeUserData()}>
+            <Text style={styles.buttonText}>Save Changes</Text>
           </Pressable>
           <Pressable style={styles.button} onPress={() => handleSignOut()}>
             <Text style={styles.buttonText}>Sign Out</Text>
@@ -157,6 +186,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontFamily: "Proxima-Nova",
+    fontWeight: "bold",
   },
 });
 

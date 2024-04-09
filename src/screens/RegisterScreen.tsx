@@ -9,14 +9,12 @@ import {
   SafeAreaView,
   KeyboardAvoidingView,
 } from "react-native";
-import { auth } from "../../firebaseConfig";
+import { auth, db } from "firebaseConfig";
 import {
-  reload,
   createUserWithEmailAndPassword,
   updateProfile,
   sendEmailVerification,
 } from "firebase/auth";
-import { db } from "../../firebaseConfig";
 import { doc, setDoc } from "firebase/firestore";
 
 const RegisterScreen = ({ navigation }) => {
@@ -41,7 +39,6 @@ const RegisterScreen = ({ navigation }) => {
         setDoc(doc(db, "users", cred.user.uid), {
           id: cred.user.uid,
           name: fullname,
-          email: email,
         });
 
         updateProfile(auth.currentUser, {

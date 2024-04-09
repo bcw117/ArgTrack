@@ -19,28 +19,15 @@ const LoginScreen = ({ navigation }) => {
 
   // Check if user has signed in or not
   const handleSignIn = () => {
-    signInWithEmailAndPassword(auth, email, password)
-      .then(() => {
-        Alert.alert("Success");
-      })
-      .catch((e) => {
-        Alert.alert("Error", "Incorrect email or password");
-      });
+    signInWithEmailAndPassword(auth, email, password).catch((e) => {
+      Alert.alert("Error", "Incorrect email or password");
+    });
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView behavior="position" style={styles.inner}>
-        <Text
-          style={{
-            textAlign: "center",
-            fontFamily: "Nexa-Bold",
-            fontSize: 50,
-            marginBottom: 25,
-          }}
-        >
-          ArgTrack
-        </Text>
+        <Text style={styles.title}>ArgTrack</Text>
         <View style={styles.input}>
           <TextInput
             placeholder="Email"
@@ -84,6 +71,12 @@ const styles = StyleSheet.create({
   inner: {
     alignContent: "center",
     width: "90%",
+  },
+  title: {
+    textAlign: "center",
+    fontFamily: "Nexa-Bold",
+    fontSize: 50,
+    marginBottom: 25,
   },
   input: {
     borderColor: "#e8e8e8",

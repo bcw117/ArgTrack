@@ -8,9 +8,9 @@ import {
   TextInput,
 } from "react-native";
 
-const ArgumentLog = ({ item, key, setUpdatedText, updateLog, deleteLog }) => {
+const ArgumentLog = ({ item, uKey, setUpdatedText, updateLog, deleteLog }) => {
   return (
-    <View style={[styles.logContainer, styles.shadowProp]} key={key}>
+    <View style={[styles.logContainer, styles.shadowProp]} key={uKey}>
       <Text style={{ fontFamily: "SourceSansPro-Bold" }}>Reason:</Text>
       <TextInput
         style={{
