@@ -8,6 +8,7 @@ import {
   TextInput,
   SafeAreaView,
   KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { auth, db } from "firebaseConfig";
 import {
@@ -40,7 +41,6 @@ const RegisterScreen = ({ navigation }) => {
           id: cred.user.uid,
           name: fullname,
         });
-
         updateProfile(auth.currentUser, {
           displayName: username,
         });
@@ -61,7 +61,10 @@ const RegisterScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <KeyboardAvoidingView behavior="position" style={styles.inner}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "position" : "height"}
+        style={styles.inner}
+      >
         <Text
           style={{
             textAlign: "center",

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -12,52 +12,51 @@ import {
 import { auth, db } from "../../firebaseConfig";
 import { signOut, updateProfile } from "firebase/auth";
 import { getDoc, setDoc, doc } from "firebase/firestore";
+import { AuthContext } from "@/context/AuthContext";
 
 const AccountScreen = ({ navigation }) => {
+  const userData = useContext(AuthContext);
   const [name, setName] = useState("");
-  const [username, setUserName] = useState(auth.currentUser.displayName);
-  const [email, setEmail] = useState("");
-  const [verifiedStatus, setVerifiedStatus] = useState(
-    auth.currentUser.emailVerified
-  );
+  const [displayName, setDisplayName] = useState(userData.displayName);
 
-  // Check user sign-out
   const handleSignOut = () => {
     signOut(auth).catch((error) => {
-      alert(error);
+      Alert.alert("There was an error signing out");
     });
   };
 
-  const getUserData = () => {
-    const docRef = doc(db, "users", auth.currentUser.uid);
+  const getName = () => {
+    const docRef = doc(db, "users", userData.id);
     getDoc(docRef)
       .then((results) => {
-        let userData = results.data();
-        setName(userData.name);
-        setEmail(auth.currentUser.email);
+        let data = results.data();
+        setName(data.name);
       })
       .catch((error) => {
-        return alert(error);
+        return Alert.alert(error);
       });
   };
 
   const changeUserData = () => {
     setDoc(
-      doc(db, "users", auth.currentUser.uid),
+      doc(db, "users", userData.id),
       {
         name: name,
       },
       { merge: true }
     );
+
     updateProfile(auth.currentUser, {
-      displayName: username,
+      displayName: displayName,
     });
+
+    userData.displayName = displayName;
 
     Alert.alert("Success", "Your changes have been saved!");
   };
 
   useEffect(() => {
-    getUserData();
+    getName();
   }, []);
 
   return (
@@ -77,9 +76,9 @@ const AccountScreen = ({ navigation }) => {
           <Text style={styles.field}>Username: </Text>
           <TextInput
             style={styles.input}
-            onChangeText={(text) => setUserName(text)}
+            onChangeText={(text) => setDisplayName(text)}
           >
-            {username}
+            {userData.displayName}
           </TextInput>
         </View>
         <View style={styles.inner}>
@@ -87,12 +86,12 @@ const AccountScreen = ({ navigation }) => {
           <Text
             style={{ flex: 1, borderRadius: 5, padding: 4, fontSize: 14.5 }}
           >
-            {email}
+            {userData.email}
           </Text>
         </View>
         <View style={styles.inner}>
           <Text style={styles.field}>Verified Status: </Text>
-          {verifiedStatus ? (
+          {userData.isVerified ? (
             <View
               style={{
                 backgroundColor: "#5bf07b",

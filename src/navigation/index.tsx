@@ -1,35 +1,45 @@
 import React, { useState, useEffect } from "react";
 import { View, ActivityIndicator } from "react-native";
 
-import AppStack from "./AppStack";
-import AuthStack from "./AuthStack";
+import AppStack from "@/navigation/AppStack";
+import AuthStack from "@/navigation/AuthStack";
+import { AuthContext } from "@/context/AuthContext";
 
-import { auth } from "../../firebaseConfig";
-import { onIdTokenChanged, reload } from "firebase/auth";
+import { auth } from "firebaseConfig";
+import { onIdTokenChanged } from "firebase/auth";
 
 // Create a root navigation that handles what stacks to render
 
-const RootNavigation = () => {
-  // Get state variables to check if user is signed in or not
-  const [user, setUser] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isVerified, setIsVerified] = useState(false);
+export interface UserData {
+  displayName: string;
+  email: string;
+  isVerified: boolean;
+  id: string;
+}
 
-  // Check to see if user has signed in or not
+const RootNavigation = () => {
+  const [user, setUser] = useState(undefined);
+  const [userData, setUserData] = useState<UserData>(undefined);
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     onIdTokenChanged(auth, (user) => {
       if (user) {
         setUser(user);
-        setIsVerified(user.emailVerified);
+        setUserData({
+          displayName: user.displayName,
+          email: user.email,
+          isVerified: user.emailVerified,
+          id: user.uid,
+        });
       } else {
-        setUser(null);
+        setUser(undefined);
+        setUserData(undefined);
       }
-      // isLoading is set to false once page has figured out if user is signed in or not
       setIsLoading(false);
     });
-  }, [isLoading, user, isVerified]); // If isLoading or user is updated, run useEffect again
+  }, [user]);
 
-  // Show a loading screen while page checks if user is signed in
   if (isLoading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -38,8 +48,13 @@ const RootNavigation = () => {
     );
   }
 
-  // Render page based on if user is signed in or not
-  return user && isVerified ? <AppStack /> : <AuthStack />;
+  return user ? (
+    <AuthContext.Provider value={userData}>
+      <AppStack />
+    </AuthContext.Provider>
+  ) : (
+    <AuthStack />
+  );
 };
 
 export default RootNavigation;

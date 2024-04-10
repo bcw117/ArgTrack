@@ -13,44 +13,35 @@ import {
   reauthenticateWithCredential,
   EmailAuthProvider,
 } from "firebase/auth";
-import { auth, db } from "firebaseConfig";
-import { updateDoc, doc } from "firebase/firestore";
+import { auth } from "firebaseConfig";
 
 const ChangeEmailScreen = ({ navigation }) => {
+  const user = auth.currentUser;
   const [newEmail, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const changeEmail = async () => {
-    if (newEmail === auth.currentUser.email || newEmail === "") {
+    if (newEmail === user.email || newEmail === "") {
       console.log("worked");
       return Alert.alert("Error", "Invalid Email");
     }
-    const credentials = EmailAuthProvider.credential(
-      auth.currentUser.email,
-      password
-    );
+    const credentials = EmailAuthProvider.credential(user.email, password);
 
-    reauthenticateWithCredential(auth.currentUser, credentials).catch(
-      (error) => {
-        return alert(error);
-      }
-    );
+    reauthenticateWithCredential(user, credentials).catch((error) => {
+      return Alert.alert("There was an error changing your email");
+    });
 
-    const docRef = doc(db, "users", auth.currentUser.uid);
-
-    try {
-      await updateEmail(auth.currentUser, newEmail);
-      updateDoc(docRef, {
-        email: newEmail,
+    updateEmail(user, newEmail)
+      .then(() => {
+        Alert.alert("Email Updated");
+      })
+      .catch((error) => {
+        Alert.alert("There was an error changing your email");
       });
-      Alert.alert("Email Changed", "Email has been successfully changed!");
-    } catch (error) {
-      alert(error);
-    } finally {
-      setPassword("");
-      setEmail("");
-      navigation.navigate("TabStack");
-    }
+
+    setPassword("");
+    setEmail("");
+    navigation.navigate("TabStack");
   };
 
   return (

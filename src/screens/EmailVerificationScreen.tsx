@@ -8,12 +8,11 @@ import {
   Alert,
   TextInput,
   SafeAreaView,
-  KeyboardAvoidingView,
 } from "react-native";
 import { auth } from "firebaseConfig";
 import { sendEmailVerification, reload } from "firebase/auth";
 
-const EmailVerification = ({ navigation }) => {
+const EmailVerification = () => {
   const resendEmail = () => {
     sendEmailVerification(auth.currentUser).then(() => {
       alert("Email sent");
@@ -25,19 +24,19 @@ const EmailVerification = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView>
-      <Text>We have sent you an verification email</Text>
-      <Pressable onPress={() => resendEmail()}>
+    <SafeAreaView style={styles.container}>
+      <Text style={styles.title}>We have sent you an verification email</Text>
+      <Pressable style={styles.button} onPress={() => resendEmail()}>
         <Text>Resend</Text>
       </Pressable>
-      <Pressable style={emailVerify.button} onPress={() => checkVerified()}>
+      <Pressable style={styles.button} onPress={() => checkVerified()}>
         <Text>Proceed</Text>
       </Pressable>
     </SafeAreaView>
   );
 };
 
-const emailVerify = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",

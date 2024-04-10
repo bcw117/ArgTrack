@@ -29,10 +29,10 @@ const CalendarScreen = () => {
     );
 
     if (!text || !date) {
-      return Alert.alert("You have not entered a valid reason/date");
+      return Alert.alert("You have not entered a reason/date");
     }
 
-    addDoc(collection(db, "fightLog"), {
+    addDoc(collection(db, "argumentLog"), {
       user_id: auth.currentUser.uid,
       reason: text,
       date: tempDate,

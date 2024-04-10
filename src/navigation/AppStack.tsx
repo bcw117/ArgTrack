@@ -3,7 +3,6 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import TabStack from "./TabStack";
-import ScreenTitle from "@components/ScreenTitle";
 import ChangePasswordScreen from "@screens/ChangePasswordScreen";
 import ChangeEmailScreen from "@screens/ChangeEmailScreen";
 import { FontAwesome5, MaterialIcons } from "@expo/vector-icons";

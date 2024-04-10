@@ -17,21 +17,17 @@ import {
 } from "firebase/auth";
 
 const ChangePasswordScreen = ({ navigation }) => {
+  const user = auth.currentUser;
   const [prevPass, setPrevPass] = useState("");
   const [newPass, setNewPass] = useState("");
   const [confirmPass, setConfirmPass] = useState("");
 
   const confirmNewPassword = async () => {
-    const credential = EmailAuthProvider.credential(
-      auth.currentUser.email,
-      prevPass
-    );
+    const credential = EmailAuthProvider.credential(user.email, prevPass);
 
-    reauthenticateWithCredential(auth.currentUser, credential).catch(
-      (error) => {
-        alert(error);
-      }
-    );
+    reauthenticateWithCredential(user, credential).catch((error) => {
+      Alert.alert(error);
+    });
 
     if (newPass === prevPass) {
       return Alert.alert(
@@ -46,7 +42,7 @@ const ChangePasswordScreen = ({ navigation }) => {
     }
 
     try {
-      await updatePassword(auth.currentUser, newPass);
+      await updatePassword(user, newPass);
       alert("Your password has been updated");
     } catch (error) {
       alert(error);
