@@ -5,14 +5,15 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import TabStack from "./TabStack";
 import ChangePasswordScreen from "@screens/ChangePasswordScreen";
 import ChangeEmailScreen from "@screens/ChangeEmailScreen";
-import { FontAwesome5, MaterialIcons } from "@expo/vector-icons";
+import EmailVerificationScreen from "@screens/EmailVerificationScreen";
+import { FontAwesome5, MaterialIcons, Octicons } from "@expo/vector-icons";
 
 const Stack = createNativeStackNavigator();
 
 const AppStack = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName={"Login"}>
+      <Stack.Navigator>
         <Stack.Screen
           name="TabStack"
           options={{ headerShown: false }}
@@ -35,6 +36,15 @@ const AppStack = () => {
             ),
           }}
           component={ChangeEmailScreen}
+        />
+        <Stack.Screen
+          name="EmailVerification"
+          component={EmailVerificationScreen}
+          options={{
+            headerTitle: () => (
+              <Octicons name="unverified" size={24} color="black" />
+            ),
+          }}
         />
       </Stack.Navigator>
     </NavigationContainer>

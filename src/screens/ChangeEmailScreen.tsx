@@ -7,6 +7,7 @@ import {
   TextInput,
   SafeAreaView,
   KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import {
   updateEmail,
@@ -22,7 +23,6 @@ const ChangeEmailScreen = ({ navigation }) => {
 
   const changeEmail = async () => {
     if (newEmail === user.email || newEmail === "") {
-      console.log("worked");
       return Alert.alert("Error", "Invalid Email");
     }
     const credentials = EmailAuthProvider.credential(user.email, password);
@@ -46,7 +46,9 @@ const ChangeEmailScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <KeyboardAvoidingView behavior="position">
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "position" : "height"}
+      >
         <Text style={styles.title}>Change your Email</Text>
         <TextInput
           style={styles.input}

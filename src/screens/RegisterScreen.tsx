@@ -52,7 +52,6 @@ const RegisterScreen = ({ navigation }) => {
             "We have sent an email to verify your email address"
           );
         });
-        navigation.navigate("EmailVerification");
       })
 
       .catch((error) => {

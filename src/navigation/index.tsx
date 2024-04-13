@@ -8,8 +8,6 @@ import { AuthContext } from "@/context/AuthContext";
 import { auth } from "firebaseConfig";
 import { onIdTokenChanged } from "firebase/auth";
 
-// Create a root navigation that handles what stacks to render
-
 export interface UserData {
   displayName: string;
   email: string;
@@ -48,16 +46,13 @@ const RootNavigation = () => {
     );
   }
 
-  if (user && userData) {
-    if (userData.isVerified) {
-      return (
-        <AuthContext.Provider value={userData}>
-          <AppStack />
-        </AuthContext.Provider>
-      );
-    }
-  }
-  return <AuthStack />;
+  return user ? (
+    <AuthContext.Provider value={userData}>
+      <AppStack />
+    </AuthContext.Provider>
+  ) : (
+    <AuthStack />
+  );
 };
 
 export default RootNavigation;

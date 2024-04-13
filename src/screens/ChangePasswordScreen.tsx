@@ -8,6 +8,7 @@ import {
   SafeAreaView,
   KeyboardAvoidingView,
   Alert,
+  Platform,
 } from "react-native";
 import { auth } from "firebaseConfig";
 import {
@@ -56,7 +57,9 @@ const ChangePasswordScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <KeyboardAvoidingView behavior="position">
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "position" : "height"}
+      >
         <Text style={styles.title}>Change your Password</Text>
         <View style={styles.inputContainer}>
           <TextInput

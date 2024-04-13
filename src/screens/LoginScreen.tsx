@@ -8,6 +8,7 @@ import {
   TextInput,
   SafeAreaView,
   KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { auth } from "firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
@@ -24,7 +25,10 @@ const LoginScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <KeyboardAvoidingView behavior="position" style={styles.inner}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "position" : "height"}
+        style={styles.inner}
+      >
         <Text style={styles.title}>ArgTrack</Text>
         <View style={styles.input}>
           <TextInput
@@ -40,6 +44,9 @@ const LoginScreen = ({ navigation }) => {
             secureTextEntry
           />
         </View>
+        <Pressable>
+          <Text>Forgot your password?</Text>
+        </Pressable>
         <View>
           <Pressable style={styles.button} onPress={handleSignIn}>
             <Text style={styles.text}>Sign In</Text>

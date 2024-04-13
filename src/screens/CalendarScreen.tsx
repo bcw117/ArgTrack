@@ -10,6 +10,7 @@ import {
   ScrollView,
   Alert,
   Dimensions,
+  Platform,
 } from "react-native";
 import moment from "moment";
 import { Calendar } from "react-native-calendars";
@@ -52,7 +53,9 @@ const CalendarScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <KeyboardAvoidingView behavior="position">
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "position" : "height"}
+      >
         <Text style={styles.title}>Calendar</Text>
         <View style={styles.calendarContainer}>
           <Calendar

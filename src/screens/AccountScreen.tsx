@@ -9,10 +9,11 @@ import {
   KeyboardAvoidingView,
   TextInput,
 } from "react-native";
-import { auth, db } from "../../firebaseConfig";
+import { auth, db } from "firebaseConfig";
 import { signOut, updateProfile } from "firebase/auth";
 import { getDoc, setDoc, doc } from "firebase/firestore";
 import { AuthContext } from "@/context/AuthContext";
+import { MaterialIcons, Feather } from "@expo/vector-icons";
 
 const AccountScreen = ({ navigation }) => {
   const userData = useContext(AuthContext);
@@ -92,28 +93,9 @@ const AccountScreen = ({ navigation }) => {
         <View style={styles.inner}>
           <Text style={styles.field}>Verified Status: </Text>
           {userData.isVerified ? (
-            <View
-              style={{
-                backgroundColor: "#5bf07b",
-                paddingVertical: 2,
-                paddingHorizontal: 3,
-                borderRadius: 5,
-              }}
-            >
-              <Text style={{ color: "#0fd419" }}>✓</Text>
-            </View>
+            <MaterialIcons name="verified" size={24} color="green" />
           ) : (
-            <View
-              style={{
-                borderColor: "#f73914",
-                paddingVertical: 1,
-                paddingHorizontal: 3,
-                borderWidth: 1,
-                borderRadius: 5,
-              }}
-            >
-              <Text style={{ color: "red" }}>X</Text>
-            </View>
+            <Feather name="x-circle" size={24} color="red" />
           )}
         </View>
         <View style={styles.buttonContainer}>
@@ -128,6 +110,12 @@ const AccountScreen = ({ navigation }) => {
             onPress={() => navigation.navigate("ChangeEmail")}
           >
             <Text style={styles.buttonText}>Change Email</Text>
+          </Pressable>
+          <Pressable
+            style={styles.button}
+            onPress={() => navigation.navigate("EmailVerification")}
+          >
+            <Text style={styles.buttonText}>Verify Email</Text>
           </Pressable>
           <Pressable style={styles.button} onPress={() => changeUserData()}>
             <Text style={styles.buttonText}>Save Changes</Text>

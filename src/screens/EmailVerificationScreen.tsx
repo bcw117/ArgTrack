@@ -19,6 +19,9 @@ const EmailVerification = ({ navigation }) => {
 
   const checkVerified = () => {
     reload(auth.currentUser);
+    if (auth.currentUser.emailVerified) {
+      navigation.goBack();
+    }
   };
 
   return (
@@ -48,6 +51,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "white",
   },
   innerContainer: {
     width: 360,

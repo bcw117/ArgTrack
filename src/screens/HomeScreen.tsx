@@ -54,15 +54,15 @@ const HomeScreen = ({ navigation }) => {
   // Rerun function everytime state is changed
 
   return (
-    <SafeAreaView style={home.container}>
-      <Text style={home.title}>Time Since Last Argument</Text>
-      <View style={home.countDownContainer}>
-        <Text style={home.dates}>{time.days} days</Text>
-        <Text style={home.dates}>{time.hours} hours</Text>
-        <Text style={home.dates}>{time.minutes} minutes</Text>
-        <Text style={home.dates}>{time.seconds} seconds</Text>
+    <SafeAreaView style={styles.container}>
+      <Text style={styles.title}>Time Since Last Argument</Text>
+      <View style={styles.countDownContainer}>
+        <Text style={styles.dates}>{time.days} days</Text>
+        <Text style={styles.dates}>{time.hours} hours</Text>
+        <Text style={styles.dates}>{time.minutes} minutes</Text>
+        <Text style={styles.dates}>{time.seconds} seconds</Text>
       </View>
-      <Pressable style={home.button} onPress={reset}>
+      <Pressable style={styles.button} onPress={reset}>
         <Text style={{ fontWeight: "bold", fontSize: 20, color: "white" }}>
           Reset
         </Text>
@@ -71,7 +71,7 @@ const HomeScreen = ({ navigation }) => {
   );
 };
 
-const home = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     backgroundColor: "white",
     alignItems: "center",
