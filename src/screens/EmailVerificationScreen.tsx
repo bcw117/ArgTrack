@@ -1,21 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import {
   StyleSheet,
   Text,
   View,
-  Button,
   Pressable,
-  Alert,
-  TextInput,
   SafeAreaView,
+  Alert,
 } from "react-native";
 import { auth } from "firebaseConfig";
 import { sendEmailVerification, reload } from "firebase/auth";
 
-const EmailVerification = () => {
+const EmailVerification = ({ navigation }) => {
   const resendEmail = () => {
     sendEmailVerification(auth.currentUser).then(() => {
-      alert("Email sent");
+      Alert.alert("Email sent");
     });
   };
 
@@ -25,9 +23,18 @@ const EmailVerification = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>We have sent you an verification email</Text>
+      <Text style={styles.title}>Verify your email</Text>
+      <View style={styles.innerContainer}>
+        <Text style={styles.subText}>
+          We have sent an email to {auth.currentUser.email} to verify your email
+          address and activate your account.
+        </Text>
+        <Text style={styles.subText}>
+          Click to proceed when email is verified or resend verification email.
+        </Text>
+      </View>
       <Pressable style={styles.button} onPress={() => resendEmail()}>
-        <Text>Resend</Text>
+        <Text>Resend Email</Text>
       </Pressable>
       <Pressable style={styles.button} onPress={() => checkVerified()}>
         <Text>Proceed</Text>
@@ -39,12 +46,23 @@ const EmailVerification = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: "center",
     alignItems: "center",
   },
+  innerContainer: {
+    width: 360,
+    marginTop: 25,
+  },
   title: {
-    fontWeight: "bold",
-    fontSize: 40,
-    padding: 20,
+    fontFamily: "Nexa-Bold",
+    textAlign: "center",
+    fontSize: 35,
+  },
+  subText: {
+    fontFamily: "Proxima-Nova",
+    textAlign: "center",
+    fontSize: 15,
+    paddingBottom: 25,
   },
   button: {
     backgroundColor: "#3B71F3",

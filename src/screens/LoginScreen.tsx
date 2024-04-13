@@ -13,11 +13,9 @@ import { auth } from "firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
 
 const LoginScreen = ({ navigation }) => {
-  // Get email and password entered by user
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  // Check if user has signed in or not
   const handleSignIn = () => {
     signInWithEmailAndPassword(auth, email, password).catch((e) => {
       Alert.alert("Error", "Incorrect email or password");

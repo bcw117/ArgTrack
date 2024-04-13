@@ -35,6 +35,7 @@ const RegisterScreen = ({ navigation }) => {
         "There was a problem with entering one of the fields"
       );
     }
+
     createUserWithEmailAndPassword(auth, email, password)
       .then((cred) => {
         setDoc(doc(db, "users", cred.user.uid), {

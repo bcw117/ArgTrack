@@ -1,12 +1,4 @@
-import {
-  View,
-  StyleSheet,
-  Text,
-  SafeAreaView,
-  Pressable,
-  ScrollView,
-  TextInput,
-} from "react-native";
+import { View, StyleSheet, Text, Pressable, TextInput } from "react-native";
 
 const ArgumentLog = ({ item, setUpdatedText, updateLog, deleteLog }) => {
   return (

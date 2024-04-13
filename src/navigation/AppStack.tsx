@@ -7,8 +7,6 @@ import ChangePasswordScreen from "@screens/ChangePasswordScreen";
 import ChangeEmailScreen from "@screens/ChangeEmailScreen";
 import { FontAwesome5, MaterialIcons } from "@expo/vector-icons";
 
-// Create a stack for the authenticaion screen
-
 const Stack = createNativeStackNavigator();
 
 const AppStack = () => {

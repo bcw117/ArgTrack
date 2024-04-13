@@ -48,13 +48,16 @@ const RootNavigation = () => {
     );
   }
 
-  return user ? (
-    <AuthContext.Provider value={userData}>
-      <AppStack />
-    </AuthContext.Provider>
-  ) : (
-    <AuthStack />
-  );
+  if (user && userData) {
+    if (userData.isVerified) {
+      return (
+        <AuthContext.Provider value={userData}>
+          <AppStack />
+        </AuthContext.Provider>
+      );
+    }
+  }
+  return <AuthStack />;
 };
 
 export default RootNavigation;
