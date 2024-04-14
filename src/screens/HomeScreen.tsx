@@ -38,13 +38,13 @@ const HomeScreen = ({ navigation }) => {
     if (time.isRunning) {
       interval = setInterval(() => {
         setTime({ ...time, seconds: time.seconds + 1 });
-        if (time.seconds == 60) {
+        if (time.seconds == 59) {
           setTime({ ...time, seconds: 0, minutes: time.minutes + 1 });
         }
-        if (time.minutes == 60) {
+        if (time.minutes == 59) {
           setTime({ ...time, minutes: 0, hours: time.hours + 1 });
         }
-        if (time.hours == 24) {
+        if (time.hours == 23) {
           setTime({ ...time, hours: 0, days: time.days + 1 });
         }
       }, 1000);

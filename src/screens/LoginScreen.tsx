@@ -44,8 +44,15 @@ const LoginScreen = ({ navigation }) => {
             secureTextEntry
           />
         </View>
-        <Pressable>
-          <Text>Forgot your password?</Text>
+        <Pressable
+          style={styles.forgotPasswordContainer}
+          onPress={() => {
+            navigation.navigate("ForgotPassword");
+          }}
+        >
+          <Text style={{ color: "blue", textDecorationLine: "underline" }}>
+            Forgot your password?
+          </Text>
         </Pressable>
         <View>
           <Pressable style={styles.button} onPress={handleSignIn}>
@@ -90,6 +97,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 10,
     marginVertical: 5,
+  },
+  forgotPasswordContainer: {
+    marginVertical: 10,
   },
   button: {
     backgroundColor: "#3B71F3",

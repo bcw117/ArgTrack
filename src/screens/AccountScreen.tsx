@@ -8,6 +8,7 @@ import {
   SafeAreaView,
   KeyboardAvoidingView,
   TextInput,
+  Platform,
 } from "react-native";
 import { auth, db } from "firebaseConfig";
 import { signOut, updateProfile } from "firebase/auth";
@@ -62,7 +63,9 @@ const AccountScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <KeyboardAvoidingView behavior="position">
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "position" : "height"}
+      >
         <Text style={styles.title}>Account</Text>
         <View style={styles.inner}>
           <Text style={styles.field}>Name: </Text>
@@ -95,7 +98,20 @@ const AccountScreen = ({ navigation }) => {
           {userData.isVerified ? (
             <MaterialIcons name="verified" size={24} color="green" />
           ) : (
-            <Feather name="x-circle" size={24} color="red" />
+            <View style={styles.verifyContainer}>
+              <Feather
+                style={{ paddingHorizontal: 10 }}
+                name="x-circle"
+                size={24}
+                color="red"
+              />
+              <Pressable
+                style={styles.verifyButton}
+                onPress={() => navigation.navigate("EmailVerification")}
+              >
+                <Text style={styles.verifyText}>Verify Email</Text>
+              </Pressable>
+            </View>
           )}
         </View>
         <View style={styles.buttonContainer}>
@@ -110,12 +126,6 @@ const AccountScreen = ({ navigation }) => {
             onPress={() => navigation.navigate("ChangeEmail")}
           >
             <Text style={styles.buttonText}>Change Email</Text>
-          </Pressable>
-          <Pressable
-            style={styles.button}
-            onPress={() => navigation.navigate("EmailVerification")}
-          >
-            <Text style={styles.buttonText}>Verify Email</Text>
           </Pressable>
           <Pressable style={styles.button} onPress={() => changeUserData()}>
             <Text style={styles.buttonText}>Save Changes</Text>
@@ -155,12 +165,24 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 4,
   },
+  verifyContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  verifyText: {
+    fontSize: 12.5,
+  },
+  verifyButton: {
+    backgroundColor: "#3B71F3",
+    padding: 7,
+    borderRadius: 5,
+  },
   field: {
     fontSize: 17.5,
     fontWeight: "bold",
   },
   buttonContainer: {
-    marginTop: 50,
+    marginTop: 30,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -172,7 +194,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   buttonText: {
-    fontFamily: "Proxima-Nova",
+    fontFamily: "Roboto-Regular",
     fontWeight: "bold",
   },
 });
