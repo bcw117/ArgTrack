@@ -11,6 +11,9 @@ function App() {
     "Roboto-Regular": require("./assets/fonts/Roboto-Regular.ttf"),
     "Roboto-Bold": require("./assets/fonts/Roboto-Bold.ttf"),
     "Proxima-Nova": require("./assets/fonts/Proxima-Nova.otf"),
+    "Nunito-Regular": require("./assets/fonts/Nunito-Regular.ttf"),
+    "Nunito-SemiBold": require("./assets/fonts/Nunito-SemiBold.ttf"),
+    "Nunito-Bold": require("./assets/fonts/Nunito-Bold.ttf"),
   });
 
   if (!loaded) {
