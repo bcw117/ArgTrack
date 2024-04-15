@@ -13,7 +13,6 @@ import {
 import { auth, db } from "firebaseConfig";
 import {
   createUserWithEmailAndPassword,
-  updateProfile,
   sendEmailVerification,
 } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
@@ -40,10 +39,8 @@ const RegisterScreen = ({ navigation }) => {
       .then((cred) => {
         setDoc(doc(db, "users", cred.user.uid), {
           id: cred.user.uid,
+          username: username,
           name: fullname,
-        });
-        updateProfile(auth.currentUser, {
-          displayName: username,
         });
 
         sendEmailVerification(auth.currentUser).then(() => {

@@ -11,7 +11,7 @@ import {
   Platform,
 } from "react-native";
 import { auth, db } from "firebaseConfig";
-import { signOut, updateProfile } from "firebase/auth";
+import { signOut } from "firebase/auth";
 import { getDoc, setDoc, doc } from "firebase/firestore";
 import { AuthContext } from "@/context/AuthContext";
 import { MaterialIcons, Feather } from "@expo/vector-icons";
@@ -19,7 +19,7 @@ import { MaterialIcons, Feather } from "@expo/vector-icons";
 const AccountScreen = ({ navigation }) => {
   const userData = useContext(AuthContext);
   const [name, setName] = useState("");
-  const [displayName, setDisplayName] = useState(userData.displayName);
+  const [displayName, setDisplayName] = useState("");
 
   const handleSignOut = () => {
     signOut(auth).catch((error) => {
@@ -27,12 +27,13 @@ const AccountScreen = ({ navigation }) => {
     });
   };
 
-  const getName = () => {
+  const getAccountData = () => {
     const docRef = doc(db, "users", userData.id);
     getDoc(docRef)
       .then((results) => {
         let data = results.data();
         setName(data.name);
+        setDisplayName(data.username);
       })
       .catch((error) => {
         return Alert.alert(error);
@@ -44,21 +45,16 @@ const AccountScreen = ({ navigation }) => {
       doc(db, "users", userData.id),
       {
         name: name,
+        username: displayName,
       },
       { merge: true }
     );
-
-    updateProfile(auth.currentUser, {
-      displayName: displayName,
-    });
-
-    userData.displayName = displayName;
 
     Alert.alert("Success", "Your changes have been saved!");
   };
 
   useEffect(() => {
-    getName();
+    getAccountData();
   }, []);
 
   return (
@@ -82,7 +78,7 @@ const AccountScreen = ({ navigation }) => {
             style={styles.input}
             onChangeText={(text) => setDisplayName(text)}
           >
-            {userData.displayName}
+            {displayName}
           </TextInput>
         </View>
         <View style={styles.inner}>

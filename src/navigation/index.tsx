@@ -9,7 +9,6 @@ import { auth } from "firebaseConfig";
 import { onIdTokenChanged } from "firebase/auth";
 
 export interface UserData {
-  displayName: string;
   email: string;
   isVerified: boolean;
   id: string;
@@ -25,7 +24,6 @@ const RootNavigation = () => {
       if (user) {
         setUser(user);
         setUserData({
-          displayName: user.displayName,
           email: user.email,
           isVerified: user.emailVerified,
           id: user.uid,

@@ -10,15 +10,27 @@ import {
   Alert,
   Platform,
 } from "react-native";
+import { sendPasswordResetEmail } from "firebase/auth";
+import { auth } from "firebaseConfig";
 
 const ResetPasswordScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
 
-  const sendEmail = () => {
+  const resetPassword = () => {
     if (email === "") {
       return Alert.alert("Error", "Fields have not been filled in");
     }
-    navigation.navigate("Login");
+    sendPasswordResetEmail(auth, email)
+      .then(() => {
+        Alert.alert("Email has been sent");
+        navigation.navigate("Login");
+      })
+      .catch((error) => {
+        Alert.alert(
+          "Error",
+          "There was an error in sending the email. Please try again later."
+        );
+      });
   };
 
   return (
@@ -38,7 +50,7 @@ const ResetPasswordScreen = ({ navigation }) => {
             onChangeText={(text) => setEmail(text)}
           />
         </View>
-        <Pressable style={styles.button} onPress={() => sendEmail}>
+        <Pressable style={styles.button} onPress={() => resetPassword()}>
           <Text>Submit</Text>
         </Pressable>
       </KeyboardAvoidingView>
