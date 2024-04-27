@@ -1,12 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import HomeScreen from "../screens/HomeScreen";
-import HistoryScreen from "../screens/HistoryScreen";
 import CalendarScreen from "../screens/CalendarScreen";
 import AccountScreen from "../screens/AccountScreen";
 
 import { Feather, MaterialIcons } from "@expo/vector-icons";
+import ArgumentLogScreen from "@screens/ArgumentLogScreen";
 
 // Create a stack for screens when user is logged in
 const Tab = createBottomTabNavigator();
@@ -26,15 +26,22 @@ const TabStack = () => {
             return <Feather name="user" size={size} color={color} />;
           }
         },
-        tabBarActiveTintColor: "black",
-        tabBarInactiveTintColor: "gray",
+        tabBarActiveTintColor: "#FFA001",
+        tabBarInactiveTintColor: "#CDCDE0",
+        tabBarShowLabel: false,
         headerShown: false,
+
+        tabBarStyle: {
+          backgroundColor: "#161622",
+          borderTopWidth: 1,
+          borderTopColor: "#232533",
+        },
       })}
-      initialRouteName={"Login"}
+      initialRouteName={"Timer"}
     >
       <Tab.Screen name="Timer" component={HomeScreen} />
       <Tab.Screen name="Calendar" component={CalendarScreen} />
-      <Tab.Screen name="History" component={HistoryScreen} />
+      <Tab.Screen name="History" component={ArgumentLogScreen} />
       <Tab.Screen name="Account" component={AccountScreen} />
     </Tab.Navigator>
   );

@@ -1,16 +1,7 @@
 import React, { useState, useEffect } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  Button,
-  Pressable,
-  Alert,
-  TextInput,
-  SafeAreaView,
-} from "react-native";
+import { StyleSheet, Text, View, Pressable, SafeAreaView } from "react-native";
 
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = () => {
   // Assign state variables to screen
   const [time, setTime] = useState({
     seconds: 0,
@@ -51,7 +42,6 @@ const HomeScreen = ({ navigation }) => {
       return () => clearInterval(interval);
     }
   }, [time]);
-  // Rerun function everytime state is changed
 
   return (
     <SafeAreaView style={styles.container}>
@@ -63,7 +53,14 @@ const HomeScreen = ({ navigation }) => {
         <Text style={styles.dates}>{time.seconds} seconds</Text>
       </View>
       <Pressable style={styles.button} onPress={reset}>
-        <Text style={{ fontWeight: "bold", fontSize: 20, color: "white" }}>
+        <Text
+          style={{
+            fontWeight: "bold",
+            fontSize: 20,
+            color: "white",
+            fontFamily: "Nunito-SemiBold",
+          }}
+        >
           Reset
         </Text>
       </Pressable>
@@ -73,33 +70,32 @@ const HomeScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "white",
+    backgroundColor: "#171324",
     alignItems: "center",
     height: "100%",
   },
-
   countDownContainer: {
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
   },
-
   dates: {
+    color: "white",
     fontFamily: "LemonMilk-Bold",
     fontSize: 20,
     padding: 15,
   },
   title: {
+    color: "white",
     fontFamily: "Nexa-Bold",
     textAlign: "center",
-    fontWeight: "bold",
     fontSize: 40,
     padding: 20,
   },
   button: {
     margin: 30,
     padding: 10,
-    backgroundColor: "black",
+    backgroundColor: "#fa9c05",
     borderRadius: 10,
   },
   timer: {

@@ -1,3 +1,4 @@
+import { supabase } from "@/lib/supabase";
 import React, { useState } from "react";
 import {
   StyleSheet,
@@ -10,28 +11,15 @@ import {
   Alert,
   Platform,
 } from "react-native";
-import { sendPasswordResetEmail } from "firebase/auth";
-import { auth } from "firebaseConfig";
 
-const ResetPasswordScreen = ({ navigation }) => {
+const ResetPasswordScreen = () => {
   const [email, setEmail] = useState("");
 
-  const resetPassword = () => {
-    if (email === "") {
-      return Alert.alert("Error", "Fields have not been filled in");
-    }
-    sendPasswordResetEmail(auth, email)
-      .then(() => {
-        Alert.alert("Email has been sent");
-        navigation.navigate("Login");
-      })
-      .catch((error) => {
-        Alert.alert(
-          "Error",
-          "There was an error in sending the email. Please try again later."
-        );
-      });
-  };
+  async function sendEmail() {
+    const { data, error } = await supabase.auth.resetPasswordForEmail(email);
+
+    if (error) Alert.alert(error.message);
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -46,12 +34,11 @@ const ResetPasswordScreen = ({ navigation }) => {
           </Text>
           <TextInput
             style={styles.input}
-            placeholder="Enter your email"
             onChangeText={(text) => setEmail(text)}
           />
         </View>
-        <Pressable style={styles.button} onPress={() => resetPassword()}>
-          <Text>Submit</Text>
+        <Pressable style={styles.button} onPress={sendEmail}>
+          <Text style={{ fontFamily: "Nunito-SemiBold" }}>Submit</Text>
         </Pressable>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -63,24 +50,27 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "white",
+    backgroundColor: "#171324",
   },
   inputContainer: {
     alignItems: "center",
     marginHorizontal: 20,
   },
   title: {
-    fontFamily: "SourceSansPro-Bold",
-    fontWeight: "bold",
+    color: "white",
+    fontFamily: "Nexa-Bold",
     textAlign: "center",
     fontSize: 30,
     padding: 20,
   },
   text: {
+    fontFamily: "Nunito-Regular",
+    color: "white",
+    textAlign: "center",
     marginBottom: 10,
   },
   button: {
-    backgroundColor: "#3B71F3",
+    backgroundColor: "#fa9c05",
     padding: 15,
     marginVertical: 5,
     marginLeft: 20,
@@ -89,12 +79,14 @@ const styles = StyleSheet.create({
     width: 100,
   },
   input: {
+    color: "white",
+    backgroundColor: "#1f1b2e",
     borderColor: "black",
     borderWidth: 1,
     borderRadius: 5,
     padding: 10,
     marginVertical: 5,
-    fontFamily: "Roboto-Regular",
+    fontFamily: "Nunito-Regular",
     width: 350,
   },
 });

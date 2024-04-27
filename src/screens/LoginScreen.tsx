@@ -10,20 +10,25 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import { auth } from "firebaseConfig";
-import { signInWithEmailAndPassword } from "firebase/auth";
 import { Ionicons } from "@expo/vector-icons";
+import { supabase } from "@/lib/supabase";
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSignIn = () => {
-    signInWithEmailAndPassword(auth, email, password).catch((e) => {
-      Alert.alert("Error", "Incorrect email or password");
+  async function signInWithEmail() {
+    setLoading(true);
+    const { error } = await supabase.auth.signInWithPassword({
+      email: email,
+      password: password,
     });
-  };
+
+    if (error) Alert.alert(error.message);
+    setLoading(false);
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -75,7 +80,7 @@ const LoginScreen = ({ navigation }) => {
           </Text>
         </Pressable>
         <View style={{ alignItems: "center" }}>
-          <Pressable style={styles.button} onPress={handleSignIn}>
+          <Pressable style={styles.button} onPress={signInWithEmail}>
             <Text style={{ color: "black", fontFamily: "Nunito-Bold" }}>
               Sign In
             </Text>

@@ -7,39 +7,35 @@ import {
   SafeAreaView,
   Alert,
 } from "react-native";
-import { auth } from "firebaseConfig";
-import { sendEmailVerification, reload } from "firebase/auth";
 
 const EmailVerification = ({ navigation }) => {
-  const resendEmail = () => {
-    sendEmailVerification(auth.currentUser).then(() => {
-      Alert.alert("Email sent");
-    });
-  };
-
-  const checkVerified = () => {
-    reload(auth.currentUser);
-    if (auth.currentUser.emailVerified) {
-      navigation.goBack();
-    }
-  };
-
+  // const resendEmail = () => {
+  //   sendEmailVerification(auth.currentUser).then(() => {
+  //     Alert.alert("Email sent");
+  //   });
+  // };
+  // const checkVerified = () => {
+  //   reload(auth.currentUser);
+  //   if (auth.currentUser.emailVerified) {
+  //     navigation.goBack();
+  //   }
+  // };
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Verify your email</Text>
       <View style={styles.innerContainer}>
         <Text style={styles.subText}>
-          We have sent an email to {auth.currentUser.email} to verify your email
-          address and activate your account.
+          We have sent an email to {"PLACE_HOLDER"} to verify your email address
+          and activate your account.
         </Text>
         <Text style={styles.subText}>
           Click to proceed when email is verified or resend verification email.
         </Text>
       </View>
-      <Pressable style={styles.button} onPress={() => resendEmail()}>
+      <Pressable style={styles.button} onPress={() => {}}>
         <Text>Resend Email</Text>
       </Pressable>
-      <Pressable style={styles.button} onPress={() => checkVerified()}>
+      <Pressable style={styles.button} onPress={() => {}}>
         <Text>Proceed</Text>
       </Pressable>
     </SafeAreaView>

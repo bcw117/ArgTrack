@@ -1,3 +1,4 @@
+import { supabase } from "@/lib/supabase";
 import React, { useState } from "react";
 import {
   StyleSheet,
@@ -9,40 +10,34 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import {
-  updateEmail,
-  reauthenticateWithCredential,
-  EmailAuthProvider,
-} from "firebase/auth";
-import { auth } from "firebaseConfig";
 
 const ChangeEmailScreen = ({ navigation }) => {
-  const user = auth.currentUser;
   const [newEmail, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const changeEmail = async () => {
-    if (newEmail === user.email || newEmail === "") {
-      return Alert.alert("Error", "Invalid Email");
-    }
-    const credentials = EmailAuthProvider.credential(user.email, password);
-
-    reauthenticateWithCredential(user, credentials).catch((error) => {
-      return Alert.alert("There was an error changing your email");
+  async function changeEmail() {
+    const response = await supabase.rpc("verify_user_password", {
+      password: password,
     });
 
-    updateEmail(user, newEmail)
-      .then(() => {
-        Alert.alert("Email Updated");
-      })
-      .catch((error) => {
-        Alert.alert("There was an error changing your email");
+    if (response.data == false) {
+      return Alert.alert("Password Incorrect");
+    } else {
+      const checkEmailQuery = await supabase.rpc("check_email", {
+        newemail: newEmail,
       });
+      if (!checkEmailQuery.data) {
+        const { data, error } = await supabase.auth.updateUser({
+          email: newEmail,
+        });
 
-    setPassword("");
-    setEmail("");
-    navigation.navigate("TabStack");
-  };
+        if (error) return Alert.alert(error.message);
+
+        Alert.alert("We have sent an email to both account to verify changes");
+        navigation.navigate("Account");
+      }
+    }
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -50,18 +45,18 @@ const ChangeEmailScreen = ({ navigation }) => {
         behavior={Platform.OS === "ios" ? "position" : "height"}
       >
         <Text style={styles.title}>Change your Email</Text>
+        <Text style={styles.text}>New Email</Text>
         <TextInput
           style={styles.input}
-          placeholder="Enter your new email"
           onChangeText={(newText) => setEmail(newText)}
         />
+        <Text style={styles.text}>Password</Text>
         <TextInput
           style={styles.input}
-          placeholder="Enter your password to confirm"
           secureTextEntry={true}
           onChangeText={(newText) => setPassword(newText)}
         />
-        <Pressable style={styles.button} onPress={() => changeEmail()}>
+        <Pressable style={styles.button} onPress={changeEmail}>
           <Text>Submit</Text>
         </Pressable>
       </KeyboardAvoidingView>
@@ -74,17 +69,17 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "white",
+    backgroundColor: "#171324",
   },
   title: {
-    fontFamily: "SourceSansPro-Bold",
-    fontWeight: "bold",
+    color: "white",
+    fontFamily: "Nexa-Bold",
     textAlign: "center",
     fontSize: 30,
     padding: 15,
   },
   button: {
-    backgroundColor: "#3B71F3",
+    backgroundColor: "#fa9c05",
     padding: 15,
     marginVertical: 5,
     alignItems: "center",
@@ -92,13 +87,19 @@ const styles = StyleSheet.create({
     width: 100,
   },
   input: {
+    borderColor: "#30284a",
     borderWidth: 1,
     borderRadius: 5,
     paddingHorizontal: 10,
     paddingVertical: 10,
     marginVertical: 5,
-    fontFamily: "Roboto-Regular",
+    fontFamily: "Nunito-Regular",
+    color: "white",
     width: 350,
+  },
+  text: {
+    fontFamily: "Nunito-SemiBold",
+    color: "white",
   },
 });
 

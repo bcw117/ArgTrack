@@ -1,4 +1,5 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useState, useEffect, useContext } from "react";
+import { supabase } from "../lib/supabase";
 import {
   StyleSheet,
   Text,
@@ -10,52 +11,89 @@ import {
   TextInput,
   Platform,
 } from "react-native";
-import { auth, db } from "firebaseConfig";
-import { signOut } from "firebase/auth";
-import { getDoc, setDoc, doc } from "firebase/firestore";
 import { AuthContext } from "@/context/AuthContext";
 import { MaterialIcons, Feather } from "@expo/vector-icons";
 
-const AccountScreen = ({ navigation }) => {
-  const userData = useContext(AuthContext);
+export default function AccountScreen({ navigation }) {
+  const session = useContext(AuthContext);
+  const [loading, setLoading] = useState(true);
   const [name, setName] = useState("");
-  const [displayName, setDisplayName] = useState("");
-
-  const handleSignOut = () => {
-    signOut(auth).catch((error) => {
-      Alert.alert("There was an error signing out");
-    });
-  };
-
-  const getAccountData = () => {
-    const docRef = doc(db, "users", userData.id);
-    getDoc(docRef)
-      .then((results) => {
-        let data = results.data();
-        setName(data.name);
-        setDisplayName(data.username);
-      })
-      .catch((error) => {
-        return Alert.alert(error);
-      });
-  };
-
-  const changeUserData = () => {
-    setDoc(
-      doc(db, "users", userData.id),
-      {
-        name: name,
-        username: displayName,
-      },
-      { merge: true }
-    );
-
-    Alert.alert("Success", "Your changes have been saved!");
-  };
+  const [username, setUsername] = useState("");
 
   useEffect(() => {
-    getAccountData();
-  }, []);
+    if (session) getProfile();
+  }, [session]);
+
+  async function signOut() {
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+      Alert.alert(error.message);
+      return supabase.auth.refreshSession();
+    }
+  }
+
+  async function getProfile() {
+    try {
+      setLoading(true);
+      if (!session?.user) throw new Error("No user on the session!");
+
+      const { data, error, status } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", session?.user.id)
+        .single();
+      if (error && status !== 406) {
+        throw error;
+      }
+
+      if (data) {
+        setUsername(data.username);
+        setName(data.full_name);
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        Alert.alert(error.message);
+      }
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function updateProfile({
+    username,
+    website,
+    avatar_url,
+  }: {
+    username: string;
+    website: string;
+    avatar_url: string;
+  }) {
+    try {
+      setLoading(true);
+      if (!session?.user) throw new Error("No user on the session!");
+
+      const updates = {
+        id: session?.user.id,
+        username,
+        website,
+        avatar_url,
+        updated_at: new Date(),
+      };
+
+      const { error } = await supabase.from("profiles").upsert(updates);
+
+      if (error) {
+        throw error;
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        Alert.alert(error.message);
+      }
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -67,31 +105,35 @@ const AccountScreen = ({ navigation }) => {
           <Text style={styles.field}>Name: </Text>
           <TextInput
             style={styles.input}
-            onChangeText={(text) => setName(text)}
-          >
-            {name}
-          </TextInput>
+            value={name}
+            // onChangeText={(text) => setName(text)}
+          />
         </View>
         <View style={styles.inner}>
           <Text style={styles.field}>Username: </Text>
           <TextInput
             style={styles.input}
-            onChangeText={(text) => setDisplayName(text)}
-          >
-            {displayName}
-          </TextInput>
+            value={username}
+            onChangeText={(text) => setUsername(text)}
+          />
         </View>
         <View style={styles.inner}>
           <Text style={styles.field}>Email: </Text>
           <Text
-            style={{ flex: 1, borderRadius: 5, padding: 4, fontSize: 14.5 }}
+            style={{
+              color: "white",
+              flex: 1,
+              borderRadius: 5,
+              padding: 4,
+              fontSize: 14.5,
+            }}
           >
-            {userData.email}
+            {session?.user?.email}
           </Text>
         </View>
         <View style={styles.inner}>
           <Text style={styles.field}>Verified Status: </Text>
-          {userData.isVerified ? (
+          {session.user.user_metadata.email_verified ? (
             <MaterialIcons name="verified" size={24} color="green" />
           ) : (
             <View style={styles.verifyContainer}>
@@ -123,27 +165,32 @@ const AccountScreen = ({ navigation }) => {
           >
             <Text style={styles.buttonText}>Change Email</Text>
           </Pressable>
-          <Pressable style={styles.button} onPress={() => changeUserData()}>
+          <Pressable style={styles.button} onPress={() => {}}>
             <Text style={styles.buttonText}>Save Changes</Text>
           </Pressable>
-          <Pressable style={styles.button} onPress={() => handleSignOut()}>
+          <Pressable style={styles.button} onPress={signOut}>
             <Text style={styles.buttonText}>Sign Out</Text>
           </Pressable>
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    backgroundColor: "white",
+    backgroundColor: "#171324",
+  },
+  verticallySpaced: {
+    paddingTop: 4,
+    paddingBottom: 4,
+    alignSelf: "stretch",
   },
   title: {
+    color: "white",
     fontFamily: "Nexa-Bold",
-    fontWeight: "bold",
     textAlign: "center",
     fontSize: 40,
     padding: 10,
@@ -157,23 +204,28 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     fontSize: 14.5,
-    borderWidth: 1,
+    borderBottomWidth: 2,
     borderRadius: 5,
+    borderColor: "#30284a",
     padding: 4,
+    color: "white",
   },
   verifyContainer: {
     flexDirection: "row",
     alignItems: "center",
   },
   verifyText: {
+    fontFamily: "Nunito-SemiBold",
     fontSize: 12.5,
   },
   verifyButton: {
-    backgroundColor: "#3B71F3",
+    backgroundColor: "#fa9c05",
     padding: 7,
     borderRadius: 5,
   },
   field: {
+    fontFamily: "Nunito-Bold",
+    color: "white",
     fontSize: 17.5,
     fontWeight: "bold",
   },
@@ -183,16 +235,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   button: {
-    backgroundColor: "#3B71F3",
+    backgroundColor: "#fa9c05",
     padding: 15,
     marginVertical: 5,
     alignItems: "center",
     borderRadius: 5,
   },
   buttonText: {
-    fontFamily: "Roboto-Regular",
-    fontWeight: "bold",
+    fontFamily: "Nunito-Bold",
   },
 });
-
-export default AccountScreen;

@@ -1,3 +1,4 @@
+import { supabase } from "@/lib/supabase";
 import React, { useState } from "react";
 import {
   StyleSheet,
@@ -10,22 +11,17 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import { auth, db } from "firebaseConfig";
-import {
-  createUserWithEmailAndPassword,
-  sendEmailVerification,
-} from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
 
-const RegisterScreen = ({ navigation }) => {
+const RegisterScreen = () => {
   const [fullname, setFullName] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmationPassword, setconfirmationPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  // Create a new user using inputs from user and store in database
-  const signUp = () => {
+  async function signUpWithEmail() {
+    setLoading(true);
     if (fullname === "" || username === "" || email === "" || password === "") {
       return Alert.alert("Error", "Not all fields filled in");
     } else if (confirmationPassword != password) {
@@ -35,26 +31,27 @@ const RegisterScreen = ({ navigation }) => {
       );
     }
 
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((cred) => {
-        setDoc(doc(db, "users", cred.user.uid), {
-          id: cred.user.uid,
-          username: username,
-          name: fullname,
-        });
+    const {
+      data: { session },
+      error,
+    } = await supabase.auth.signUp({
+      email: email,
+      password: password,
+    });
 
-        sendEmailVerification(auth.currentUser).then(() => {
-          Alert.alert(
-            "Verification Email",
-            "We have sent an email to verify your email address"
-          );
-        });
-      })
+    if (error) Alert.alert(error.message);
+    else addToDatabase(session);
 
-      .catch((error) => {
-        Alert.alert("Error", "Problem with registration fields");
-      });
-  };
+    setLoading(false);
+  }
+
+  async function addToDatabase(session) {
+    const { data, error } = await supabase
+      .from("profiles")
+      .update({ username: username, full_name: fullname })
+      .eq("id", session.user.id);
+    if (error) return Alert.alert(error.message);
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -64,6 +61,7 @@ const RegisterScreen = ({ navigation }) => {
       >
         <Text
           style={{
+            color: "white",
             textAlign: "center",
             fontFamily: "Nexa-Bold",
             fontSize: 25,
@@ -73,35 +71,35 @@ const RegisterScreen = ({ navigation }) => {
           Register
         </Text>
         <View>
+          <Text style={styles.text}>Full Name</Text>
           <TextInput
             style={styles.input}
-            placeholder="Full Name"
             onChangeText={(text) => setFullName(text)}
           />
+          <Text style={styles.text}>Username</Text>
           <TextInput
             style={styles.input}
-            placeholder="Username"
             onChangeText={(text) => setUsername(text)}
           />
+          <Text style={styles.text}>Email</Text>
           <TextInput
             style={styles.input}
-            placeholder="Email"
             onChangeText={(text) => setEmail(text)}
           />
+          <Text style={styles.text}>Password</Text>
           <TextInput
             style={styles.input}
-            placeholder="Password"
             onChangeText={(text) => setPassword(text)}
             secureTextEntry={true}
           />
+          <Text style={styles.text}>Confirm Password</Text>
           <TextInput
             style={styles.input}
-            placeholder="Confirm Password"
             onChangeText={(text) => setconfirmationPassword(text)}
             secureTextEntry={true}
           />
 
-          <Pressable style={styles.button} onPress={signUp}>
+          <Pressable style={styles.button} onPress={signUpWithEmail}>
             <Text style={styles.text}>Register</Text>
           </Pressable>
         </View>
@@ -114,7 +112,7 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#f9fbfc",
+    backgroundColor: "#171324",
     height: "100%",
     width: "100%",
   },
@@ -123,21 +121,24 @@ const styles = StyleSheet.create({
     width: "90%",
   },
   input: {
-    borderColor: "#e8e8e8",
-    borderWidth: 1,
-    borderRadius: 5,
+    color: "white",
+    fontFamily: "Nunito-Regular",
+    flexDirection: "row",
+    backgroundColor: "#1f1b2e",
+    borderRadius: 7.5,
     paddingHorizontal: 10,
-    paddingVertical: 10,
+    paddingVertical: 11,
     marginVertical: 5,
   },
   button: {
-    backgroundColor: "#3B71F3",
-    padding: 15,
+    backgroundColor: "#fa9c05",
+    paddingVertical: 15,
     marginVertical: 5,
     alignItems: "center",
-    borderRadius: 5,
+    borderRadius: 10,
   },
   text: {
+    fontFamily: "Nunito-SemiBold",
     fontWeight: "bold",
     color: "white",
   },

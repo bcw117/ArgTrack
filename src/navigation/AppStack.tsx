@@ -13,7 +13,7 @@ const Stack = createNativeStackNavigator();
 const AppStack = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator initialRouteName="TabStack">
         <Stack.Screen
           name="TabStack"
           options={{ headerShown: false }}
@@ -23,8 +23,11 @@ const AppStack = () => {
           name="ChangePassword"
           options={{
             headerTitle: () => (
-              <FontAwesome5 name="lock" size={24} color="black" />
+              <FontAwesome5 name="lock" size={24} color="white" />
             ),
+            headerStyle: {
+              backgroundColor: "#171324",
+            },
           }}
           component={ChangePasswordScreen}
         />
@@ -32,8 +35,11 @@ const AppStack = () => {
           name="ChangeEmail"
           options={{
             headerTitle: () => (
-              <MaterialIcons name="email" size={24} color="black" />
+              <MaterialIcons name="email" size={24} color="white" />
             ),
+            headerStyle: {
+              backgroundColor: "#171324",
+            },
           }}
           component={ChangeEmailScreen}
         />

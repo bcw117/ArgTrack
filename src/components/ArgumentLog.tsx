@@ -18,13 +18,19 @@ const ArgumentLog = ({ item, setUpdatedText, updateLog, deleteLog }) => {
         Date:
       </Text>
       <Text style={{ fontFamily: "SourceSansPro-Regular", marginBottom: 3 }}>
-        {item.date.toDate().toDateString()}
+        {item.loggeddate}
       </Text>
       <View style={{ flexDirection: "row" }}>
-        <Pressable style={styles.button} onPress={() => updateLog(item.id)}>
+        <Pressable
+          style={styles.button}
+          onPress={() => updateLog(item.user_id)}
+        >
           <Text style={{ color: "white" }}>Update Log</Text>
         </Pressable>
-        <Pressable style={styles.button} onPress={() => deleteLog(item.id)}>
+        <Pressable
+          style={styles.button}
+          onPress={() => deleteLog(item.user_id)}
+        >
           <Text style={{ color: "white" }}>Delete Log</Text>
         </Pressable>
       </View>

@@ -1,3 +1,4 @@
+import { supabase } from "@/lib/supabase";
 import React, { useState } from "react";
 import {
   StyleSheet,
@@ -10,50 +11,38 @@ import {
   Alert,
   Platform,
 } from "react-native";
-import { auth } from "firebaseConfig";
-import {
-  reauthenticateWithCredential,
-  EmailAuthProvider,
-  updatePassword,
-} from "firebase/auth";
+import { Ionicons } from "@expo/vector-icons";
 
 const ChangePasswordScreen = ({ navigation }) => {
-  const user = auth.currentUser;
   const [prevPass, setPrevPass] = useState("");
+  const [showPrevPass, setShowPrevPass] = useState(false);
   const [newPass, setNewPass] = useState("");
+  const [showNewPass, setShowNewPass] = useState(false);
   const [confirmPass, setConfirmPass] = useState("");
+  const [showConfirmationPass, setShowConfirmationPass] = useState(false);
 
-  const confirmNewPassword = async () => {
-    const credential = EmailAuthProvider.credential(user.email, prevPass);
-
-    reauthenticateWithCredential(user, credential).catch((error) => {
-      Alert.alert(error);
-    });
-
-    if (newPass === prevPass) {
-      return Alert.alert(
-        "Password Error",
-        "Your new password cannot be the same as your old password"
-      );
-    } else if (newPass !== confirmPass) {
-      return Alert.alert(
-        "Password Error",
-        "Your confirmation password does not match"
-      );
+  async function changePassword() {
+    if (confirmPass != newPass) {
+      return Alert.alert("There was an error changing your password");
     }
 
-    try {
-      await updatePassword(user, newPass);
-      alert("Your password has been updated");
-    } catch (error) {
-      alert(error);
-    } finally {
+    const { data, error } = await supabase.rpc("change_user_password", {
+      current_plain_password: prevPass,
+      new_plain_password: newPass,
+    });
+
+    if (error) {
+      return Alert.alert(error.message);
+    }
+
+    if (data) {
       setPrevPass("");
       setNewPass("");
       setConfirmPass("");
-      navigation.navigate("TabStack");
+      supabase.auth.signOut();
+      Alert.alert("Password has successfuully changed!");
     }
-  };
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -62,23 +51,68 @@ const ChangePasswordScreen = ({ navigation }) => {
       >
         <Text style={styles.title}>Change your Password</Text>
         <View style={styles.inputContainer}>
-          <TextInput
-            style={styles.input}
-            placeholder="Previous Password"
-            onChangeText={(newText) => setPrevPass(newText)}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="New Password"
-            onChangeText={(newText) => setNewPass(newText)}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Confirm Password"
-            onChangeText={(newText) => setConfirmPass(newText)}
-          />
+          <Text style={styles.text}>Previous Password</Text>
+          <View style={styles.input}>
+            <TextInput
+              style={styles.inputText}
+              value={prevPass}
+              onChangeText={(text) => setPrevPass(text)}
+              secureTextEntry={!showPrevPass}
+            />
+            <Pressable
+              onPress={() => {
+                setShowPrevPass(!showPrevPass);
+              }}
+            >
+              {showPrevPass ? (
+                <Ionicons name="eye" size={18} color="#504b5e" />
+              ) : (
+                <Ionicons name="eye-off" size={18} color="#504b5e" />
+              )}
+            </Pressable>
+          </View>
+          <Text style={styles.text}>New Password</Text>
+          <View style={styles.input}>
+            <TextInput
+              style={styles.inputText}
+              value={newPass}
+              onChangeText={(text) => setNewPass(text)}
+              secureTextEntry={!showNewPass}
+            />
+            <Pressable
+              onPress={() => {
+                setShowNewPass(!showNewPass);
+              }}
+            >
+              {showNewPass ? (
+                <Ionicons name="eye" size={18} color="#504b5e" />
+              ) : (
+                <Ionicons name="eye-off" size={18} color="#504b5e" />
+              )}
+            </Pressable>
+          </View>
+          <Text style={styles.text}>Confirm Password</Text>
+          <View style={styles.input}>
+            <TextInput
+              style={styles.inputText}
+              value={confirmPass}
+              onChangeText={(text) => setConfirmPass(text)}
+              secureTextEntry={!showConfirmationPass}
+            />
+            <Pressable
+              onPress={() => {
+                setShowConfirmationPass(!showConfirmationPass);
+              }}
+            >
+              {showConfirmationPass ? (
+                <Ionicons name="eye" size={18} color="#504b5e" />
+              ) : (
+                <Ionicons name="eye-off" size={18} color="#504b5e" />
+              )}
+            </Pressable>
+          </View>
         </View>
-        <Pressable style={styles.button} onPress={() => confirmNewPassword()}>
+        <Pressable style={styles.button} onPress={changePassword}>
           <Text>Submit</Text>
         </Pressable>
       </KeyboardAvoidingView>
@@ -91,20 +125,20 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "white",
+    backgroundColor: "#171324",
   },
   inputContainer: {
     alignItems: "center",
   },
   title: {
-    fontFamily: "SourceSansPro-Bold",
-    fontWeight: "bold",
+    color: "white",
+    fontFamily: "Nexa-Bold",
     textAlign: "center",
     fontSize: 30,
     padding: 20,
   },
   button: {
-    backgroundColor: "#3B71F3",
+    backgroundColor: "#fa9c05",
     padding: 15,
     marginVertical: 5,
     marginLeft: 5,
@@ -113,14 +147,21 @@ const styles = StyleSheet.create({
     width: 100,
   },
   input: {
-    borderColor: "black",
-    borderWidth: 1,
-    borderRadius: 5,
+    flexDirection: "row",
+    backgroundColor: "#1f1b2e",
+    borderRadius: 7.5,
     paddingHorizontal: 10,
-    paddingVertical: 10,
+    paddingVertical: 11,
     marginVertical: 5,
-    fontFamily: "Roboto-Regular",
-    width: 350,
+  },
+  inputText: {
+    fontFamily: "Nunito-Regular",
+    width: "90%",
+    color: "white",
+  },
+  text: {
+    color: "white",
+    fontFamily: "Nunito-SemiBold",
   },
 });
 
