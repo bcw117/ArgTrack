@@ -28,6 +28,7 @@ const AppStack = () => {
             headerStyle: {
               backgroundColor: "#171324",
             },
+            headerTintColor: "white",
           }}
           component={ChangePasswordScreen}
         />
@@ -40,6 +41,7 @@ const AppStack = () => {
             headerStyle: {
               backgroundColor: "#171324",
             },
+            headerTintColor: "white",
           }}
           component={ChangeEmailScreen}
         />
@@ -48,8 +50,12 @@ const AppStack = () => {
           component={EmailVerificationScreen}
           options={{
             headerTitle: () => (
-              <Octicons name="unverified" size={24} color="black" />
+              <Octicons name="unverified" size={24} color="white" />
             ),
+            headerStyle: {
+              backgroundColor: "#171324",
+            },
+            headerTintColor: "white",
           }}
         />
       </Stack.Navigator>

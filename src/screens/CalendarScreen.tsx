@@ -23,31 +23,6 @@ const CalendarScreen = () => {
   const [date, setDate] = useState("");
   const [text, setText] = useState("");
 
-  // const addLog = () => {
-  //   Keyboard.dismiss();
-  //   let tempDate = new Date(date);
-  //   tempDate = new Date(
-  //     tempDate.setMinutes(tempDate.getMinutes() + tempDate.getTimezoneOffset())
-  //   );
-
-  //   if (!text || !date) {
-  //     return Alert.alert("You have not entered a reason/date");
-  //   }
-
-  //   addDoc(collection(db, "argumentLog"), {
-  //     user_id: auth.currentUser.uid,
-  //     reason: text,
-  //     date: tempDate,
-  //   })
-  //     .then(() => {
-  //       setText("");
-  //       Alert.alert("Record Successfully Logged!");
-  //     })
-  //     .catch((error) => {
-  //       Alert.alert(error);
-  //     });
-  // };
-
   async function logReason() {
     if (!date || !text) {
       return Alert.alert("You have not entered a valid reason or date");

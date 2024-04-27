@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { StyleSheet, Text, View, Pressable, SafeAreaView } from "react-native";
+import { supabase } from "@/lib/supabase";
+import { AuthContext } from "@/context/AuthContext";
 
 const HomeScreen = () => {
-  // Assign state variables to screen
+  const session = useContext(AuthContext);
   const [time, setTime] = useState({
     seconds: 0,
     minutes: 0,
@@ -11,7 +13,6 @@ const HomeScreen = () => {
     isRunning: true,
   });
 
-  // Reset the timer
   const reset = () => {
     setTime({
       ...time,
@@ -53,16 +54,7 @@ const HomeScreen = () => {
         <Text style={styles.dates}>{time.seconds} seconds</Text>
       </View>
       <Pressable style={styles.button} onPress={reset}>
-        <Text
-          style={{
-            fontWeight: "bold",
-            fontSize: 20,
-            color: "white",
-            fontFamily: "Nunito-SemiBold",
-          }}
-        >
-          Reset
-        </Text>
+        <Text style={styles.buttonText}>Reset</Text>
       </Pressable>
     </SafeAreaView>
   );
@@ -97,6 +89,12 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: "#fa9c05",
     borderRadius: 10,
+  },
+  buttonText: {
+    fontWeight: "bold",
+    fontSize: 20,
+    color: "white",
+    fontFamily: "Nunito-SemiBold",
   },
   timer: {
     fontSize: 20,

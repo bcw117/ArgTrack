@@ -93,9 +93,6 @@ const ArgumentLogScreen = () => {
             />
           );
         })}
-        <Pressable onPress={getUserLogs}>
-          <Text style={{ color: "white" }}>Press me</Text>
-        </Pressable>
       </ScrollView>
     </SafeAreaView>
   );
