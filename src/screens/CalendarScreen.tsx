@@ -33,14 +33,15 @@ const CalendarScreen = () => {
       tempDate.setMinutes(tempDate.getMinutes() + tempDate.getTimezoneOffset())
     );
 
-    const { error, data } = await supabase.rpc("addlog", {
+    const { error } = await supabase.rpc("addlog", {
       given_id: session.user.id,
       given_reason: text,
       given_date: date,
     });
 
-    if (error) Alert.alert(error.message);
+    if (error) return Alert.alert(error.message);
 
+    setText("");
     return Alert.alert("Successfully logged");
   }
 
@@ -101,7 +102,7 @@ const CalendarScreen = () => {
               placeholder="Type your problem here!"
               placeholderTextColor="#b7b8b6"
               onChangeText={(newText) => setText(newText)}
-              defaultValue={text}
+              value={text}
             />
             <Pressable style={styles.submitButton}>
               <Text style={styles.submitText} onPress={logReason}>

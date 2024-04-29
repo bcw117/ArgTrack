@@ -80,7 +80,15 @@ const LoginScreen = ({ navigation }) => {
           </Text>
         </Pressable>
         <View style={{ alignItems: "center" }}>
-          <Pressable style={styles.button} onPress={signInWithEmail}>
+          <Pressable
+            style={
+              !email.length || !password.length
+                ? styles.disabledButton
+                : styles.button
+            }
+            onPress={signInWithEmail}
+            disabled={!email.length || !password.length}
+          >
             <Text style={{ color: "black", fontFamily: "Nunito-Bold" }}>
               Sign In
             </Text>
@@ -120,6 +128,7 @@ const styles = StyleSheet.create({
   },
   input: {
     flexDirection: "row",
+    alignItems: "center",
     backgroundColor: "#1f1b2e",
     borderRadius: 7.5,
     paddingHorizontal: 10,
@@ -133,6 +142,15 @@ const styles = StyleSheet.create({
   },
   forgotPasswordContainer: {
     marginVertical: 5,
+  },
+  disabledButton: {
+    backgroundColor: "#fcaa26",
+    paddingVertical: 15,
+    width: "90%",
+    marginVertical: 5,
+    alignItems: "center",
+    borderRadius: 10,
+    opacity: 0.3,
   },
   button: {
     backgroundColor: "#fa9c05",

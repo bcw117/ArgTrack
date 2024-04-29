@@ -1,10 +1,7 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, Pressable, SafeAreaView } from "react-native";
-import { supabase } from "@/lib/supabase";
-import { AuthContext } from "@/context/AuthContext";
 
 const HomeScreen = () => {
-  const session = useContext(AuthContext);
   const [time, setTime] = useState({
     seconds: 0,
     minutes: 0,

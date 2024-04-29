@@ -5,20 +5,18 @@ import {
   SafeAreaView,
   ScrollView,
   Alert,
-  Pressable,
 } from "react-native";
 import ArgumentLog from "@components/ArgumentLog";
-import { AuthContext } from "@/context/AuthContext";
 import { supabase } from "@/lib/supabase";
+import { AuthContext } from "@/context/AuthContext";
 
 const ArgumentLogScreen = () => {
   const session = useContext(AuthContext);
   const [logs, setLogs] = useState([]);
-  const [updatedText, setUpdatedText] = useState("");
 
   useEffect(() => {
     getUserLogs();
-  });
+  }, []);
 
   async function getUserLogs() {
     const { data, error } = await supabase.rpc("getlogs", {
@@ -30,53 +28,36 @@ const ArgumentLogScreen = () => {
     setLogs(data);
   }
 
-  // useEffect(() => {
-  //   const collectionRef = collection(db, "fightLog");
-  //   getDocs(collectionRef)
-  //     .then((snapshot) => {
-  //       let temp = [];
-  //       snapshot.docs.forEach((doc) => {
-  //         temp.push({ ...doc.data(), id: doc.id });
-  //       });
-  //       setLogs(temp);
-  //     })
-  //     .catch((error) => {
-  //       alert(error);
-  //     });
-  // });
+  async function deleteLog(id: number) {
+    const { error } = await supabase.from("argumentlog").delete().eq("id", id);
+    if (error) return Alert.alert(error.message);
 
-  // const deleteLog = (id) => {
-  //   deleteDoc(doc(db, "fightLog", id))
-  //     .then(() => {
-  //       let existingLogs = [...logs].filter((log) => log.id !== id);
-  //       setLogs(existingLogs);
-  //       Alert.alert("Log has been deleted");
-  //     })
-  //     .catch((error) => {
-  //       Alert.alert("There was an error deleting that log");
-  //     });
-  // };
+    return Alert.alert("Argument has been successfully deleted");
+  }
 
-  // const updateLog = (id) => {
-  //   alert(updatedText);
-  //   const documentRef = doc(db, "fightLog", id);
-  //   if (updatedText) {
-  //     updateDoc(documentRef, {
-  //       reason: updatedText,
-  //     })
-  //       .then(() => {
-  //         let existingLogs = [...logs];
-  //         const updateIndex = logs.findIndex((log) => (log.id = id));
-  //         existingLogs[updateIndex].reason = updatedText;
-  //         setLogs(existingLogs);
-  //         setUpdatedText(undefined);
-  //         Alert.alert("Log has been updated");
-  //       })
-  //       .catch((error) => {
-  //         Alert.alert("There was an error updating that log");
-  //       });
-  //   }
-  // };
+  async function updateLog(id: number, text: string) {
+    const updates = {
+      user_id: session?.user.id,
+      reason: text,
+    };
+    const { error } = await supabase
+      .from("argumentlog")
+      .update(updates)
+      .eq("id", id);
+    if (error) return Alert.alert(error.message);
+    return Alert.alert("Argument has been successfully updated");
+  }
+
+  if (!logs) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <Text style={styles.title}>Argument Log</Text>
+        <ScrollView style={styles.inner}>
+          <Text style={styles.title}>There are no logs</Text>
+        </ScrollView>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -87,9 +68,8 @@ const ArgumentLogScreen = () => {
             <ArgumentLog
               item={item}
               key={key}
-              setUpdatedText={setUpdatedText}
-              updateLog={() => {}}
-              deleteLog={() => {}}
+              updateLog={updateLog}
+              deleteLog={deleteLog}
             />
           );
         })}

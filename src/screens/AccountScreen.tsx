@@ -11,8 +11,8 @@ import {
   TextInput,
   Platform,
 } from "react-native";
-import { AuthContext } from "@/context/AuthContext";
 import { MaterialIcons, Feather } from "@expo/vector-icons";
+import { AuthContext } from "@/context/AuthContext";
 
 export default function AccountScreen({ navigation }) {
   const session = useContext(AuthContext);
@@ -60,24 +60,16 @@ export default function AccountScreen({ navigation }) {
     }
   }
 
-  async function updateProfile({
-    username,
-    website,
-    avatar_url,
-  }: {
-    username: string;
-    website: string;
-    avatar_url: string;
-  }) {
+  async function updateProfile() {
     try {
       setLoading(true);
-      if (!session?.user) throw new Error("No user on the session!");
+      if (!username.length || !name.length)
+        return Alert.alert("You cannot leave any of the fields empty");
 
       const updates = {
         id: session?.user.id,
-        username,
-        website,
-        avatar_url,
+        username: username,
+        full_name: name,
         updated_at: new Date(),
       };
 
@@ -106,7 +98,7 @@ export default function AccountScreen({ navigation }) {
           <TextInput
             style={styles.input}
             value={name}
-            // onChangeText={(text) => setName(text)}
+            onChangeText={(text) => setName(text)}
           />
         </View>
         <View style={styles.inner}>
@@ -165,7 +157,7 @@ export default function AccountScreen({ navigation }) {
           >
             <Text style={styles.buttonText}>Change Email</Text>
           </Pressable>
-          <Pressable style={styles.button} onPress={() => {}}>
+          <Pressable style={styles.button} onPress={updateProfile}>
             <Text style={styles.buttonText}>Save Changes</Text>
           </Pressable>
           <Pressable style={styles.button} onPress={signOut}>

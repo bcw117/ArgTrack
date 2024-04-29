@@ -1,6 +1,8 @@
+import { useState } from "react";
 import { View, StyleSheet, Text, Pressable, TextInput } from "react-native";
 
-const ArgumentLog = ({ item, setUpdatedText, updateLog, deleteLog }) => {
+const ArgumentLog = ({ item, updateLog, deleteLog }) => {
+  const [text, setText] = useState(item.reason);
   return (
     <View style={styles.logContainer}>
       <Text style={styles.header}>Reason:</Text>
@@ -8,21 +10,18 @@ const ArgumentLog = ({ item, setUpdatedText, updateLog, deleteLog }) => {
         style={styles.text}
         defaultValue={item.reason}
         multiline={true}
-        onChangeText={(text) => setUpdatedText(text)}
+        onChangeText={(text) => setText(text)}
       ></TextInput>
       <Text style={styles.header}>Date:</Text>
       <Text style={styles.text}>{item.loggeddate}</Text>
       <View style={{ flexDirection: "row" }}>
         <Pressable
           style={styles.button}
-          onPress={() => updateLog(item.user_id)}
+          onPress={() => updateLog(item.id, text)}
         >
           <Text style={styles.buttonText}>Update Log</Text>
         </Pressable>
-        <Pressable
-          style={styles.button}
-          onPress={() => deleteLog(item.user_id)}
-        >
+        <Pressable style={styles.button} onPress={() => deleteLog(item.id)}>
           <Text style={styles.buttonText}>Delete Log</Text>
         </Pressable>
       </View>
