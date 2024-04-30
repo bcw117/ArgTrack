@@ -31,7 +31,8 @@ const EmailVerification = ({ navigation }) => {
           address and activate your account.
         </Text>
         <Text style={styles.subText}>
-          Click to proceed when email is verified or resend verification email.
+          Click to proceed when the email is verified or resend verification
+          email.
         </Text>
       </View>
       <Pressable style={styles.button} onPress={() => {}}>

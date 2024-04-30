@@ -148,6 +148,7 @@ const styles = StyleSheet.create({
   },
   input: {
     flexDirection: "row",
+    alignItems: "center",
     backgroundColor: "#1f1b2e",
     borderRadius: 7.5,
     paddingHorizontal: 10,

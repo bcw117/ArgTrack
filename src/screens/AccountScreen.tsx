@@ -97,7 +97,7 @@ export default function AccountScreen({ navigation }) {
           <Text style={styles.field}>Name: </Text>
           <TextInput
             style={styles.input}
-            value={name}
+            value={loading ? "Loading..." : name}
             onChangeText={(text) => setName(text)}
           />
         </View>
@@ -105,7 +105,7 @@ export default function AccountScreen({ navigation }) {
           <Text style={styles.field}>Username: </Text>
           <TextInput
             style={styles.input}
-            value={username}
+            value={loading ? "Loading..." : username}
             onChangeText={(text) => setUsername(text)}
           />
         </View>
@@ -162,6 +162,12 @@ export default function AccountScreen({ navigation }) {
           </Pressable>
           <Pressable style={styles.button} onPress={signOut}>
             <Text style={styles.buttonText}>Sign Out</Text>
+            <MaterialIcons
+              name="logout"
+              size={24}
+              color="black"
+              style={{ marginLeft: 6 }}
+            />
           </Pressable>
         </View>
       </KeyboardAvoidingView>
@@ -227,6 +233,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   button: {
+    flexDirection: "row",
     backgroundColor: "#fa9c05",
     padding: 15,
     marginVertical: 5,

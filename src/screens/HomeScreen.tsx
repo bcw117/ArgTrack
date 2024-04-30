@@ -1,7 +1,19 @@
-import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, Pressable, SafeAreaView } from "react-native";
+import { AuthContext } from "@/context/AuthContext";
+import React, { useState, useEffect, useContext } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Pressable,
+  SafeAreaView,
+  Alert,
+} from "react-native";
+import { supabase } from "@/lib/supabase";
 
 const HomeScreen = () => {
+  const session = useContext(AuthContext);
+  const [loading, setLoading] = useState(true);
+  const [username, setUsername] = useState();
   const [time, setTime] = useState({
     seconds: 0,
     minutes: 0,
@@ -20,9 +32,37 @@ const HomeScreen = () => {
     });
   };
 
-  // For every second, update time metrics
+  async function getProfile() {
+    try {
+      setLoading(true);
+      if (!session?.user) throw new Error("No user on the session!");
+
+      const { data, error, status } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", session?.user.id)
+        .single();
+      if (error && status !== 406) {
+        throw error;
+      }
+
+      if (data) {
+        setUsername(data.username);
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        Alert.alert(error.message);
+      }
+    } finally {
+      setLoading(false);
+    }
+  }
+
   useEffect(() => {
-    // Set interval for timer
+    getProfile();
+  }, []);
+
+  useEffect(() => {
     let interval;
     if (time.isRunning) {
       interval = setInterval(() => {
@@ -43,13 +83,17 @@ const HomeScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Time Since Last Argument</Text>
+      <Text style={styles.title}>Hello {username}</Text>
+      <Text style={styles.text}>It has been </Text>
       <View style={styles.countDownContainer}>
-        <Text style={styles.dates}>{time.days} days</Text>
-        <Text style={styles.dates}>{time.hours} hours</Text>
-        <Text style={styles.dates}>{time.minutes} minutes</Text>
-        <Text style={styles.dates}>{time.seconds} seconds</Text>
+        <Text style={styles.text}>
+          {time.days} days {time.hours} hours
+        </Text>
+        <Text style={styles.text}>
+          {time.minutes} minutes and {time.seconds} seconds
+        </Text>
       </View>
+      <Text style={styles.text}>since your last argument</Text>
       <Pressable style={styles.button} onPress={reset}>
         <Text style={styles.buttonText}>Reset</Text>
       </Pressable>
@@ -68,18 +112,25 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  dates: {
-    color: "white",
-    fontFamily: "LemonMilk-Bold",
-    fontSize: 20,
-    padding: 15,
-  },
   title: {
     color: "white",
     fontFamily: "Nexa-Bold",
     textAlign: "center",
     fontSize: 40,
     padding: 20,
+  },
+  header: {
+    color: "white",
+    fontFamily: "Proxima-Nova-Bold",
+    textAlign: "left",
+    fontSize: 25,
+    padding: 20,
+  },
+  text: {
+    color: "white",
+    fontFamily: "Proxima-Nova-Bold",
+    fontSize: 26,
+    padding: 15,
   },
   button: {
     margin: 30,

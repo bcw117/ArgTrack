@@ -5,10 +5,12 @@ import {
   SafeAreaView,
   ScrollView,
   Alert,
+  View,
 } from "react-native";
 import ArgumentLog from "@components/ArgumentLog";
 import { supabase } from "@/lib/supabase";
 import { AuthContext } from "@/context/AuthContext";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const ArgumentLogScreen = () => {
   const session = useContext(AuthContext);
@@ -52,9 +54,19 @@ const ArgumentLogScreen = () => {
     return (
       <SafeAreaView style={styles.container}>
         <Text style={styles.title}>Argument Log</Text>
-        <ScrollView style={styles.inner}>
-          <Text style={styles.title}>There are no logs</Text>
-        </ScrollView>
+        <View
+          style={[
+            styles.container,
+            { justifyContent: "center", marginBottom: 20 },
+          ]}
+        >
+          <MaterialCommunityIcons
+            name="text-box-multiple-outline"
+            size={60}
+            color="white"
+          />
+          <Text style={styles.header}>Currently No Logs</Text>
+        </View>
       </SafeAreaView>
     );
   }
@@ -99,6 +111,13 @@ const styles = StyleSheet.create({
     fontFamily: "Nexa-Bold",
     fontSize: 40,
     padding: 20,
+  },
+  header: {
+    color: "white",
+    textAlign: "center",
+    fontSize: 40,
+    padding: 20,
+    fontFamily: "Proxima-Nova-Bold",
   },
   button: {
     backgroundColor: "#3B71F3",
