@@ -83,20 +83,22 @@ const HomeScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Hello {username}</Text>
-      <Text style={styles.text}>It has been </Text>
-      <View style={styles.countDownContainer}>
-        <Text style={styles.text}>
-          {time.days} days {time.hours} hours
-        </Text>
-        <Text style={styles.text}>
-          {time.minutes} minutes and {time.seconds} seconds
-        </Text>
+      <View style={styles.inner}>
+        <View style={styles.countDownContainer}>
+          <Text style={styles.title}>Hello {username}</Text>
+          <Text style={styles.text}>It has been </Text>
+          <Text style={styles.text}>
+            {time.days} days, {time.hours} hours
+          </Text>
+          <Text style={styles.text}>
+            {time.minutes} minutes and {time.seconds} seconds
+          </Text>
+          <Text style={styles.text}>since your last argument</Text>
+        </View>
+        <Pressable style={styles.button} onPress={reset}>
+          <Text style={styles.buttonText}>Reset</Text>
+        </Pressable>
       </View>
-      <Text style={styles.text}>since your last argument</Text>
-      <Pressable style={styles.button} onPress={reset}>
-        <Text style={styles.buttonText}>Reset</Text>
-      </Pressable>
     </SafeAreaView>
   );
 };
@@ -105,19 +107,24 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "#171324",
     alignItems: "center",
+    width: "100%",
     height: "100%",
   },
-  countDownContainer: {
-    flexDirection: "column",
+  inner: {
+    flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  countDownContainer: {
+    width: 375,
+    flexDirection: "column",
+    justifyContent: "center",
   },
   title: {
     color: "white",
     fontFamily: "Nexa-Bold",
-    textAlign: "center",
     fontSize: 40,
-    padding: 20,
+    padding: 15,
   },
   header: {
     color: "white",
@@ -133,16 +140,16 @@ const styles = StyleSheet.create({
     padding: 15,
   },
   button: {
+    width: "50%",
     margin: 30,
     padding: 10,
     backgroundColor: "#fa9c05",
     borderRadius: 10,
   },
   buttonText: {
-    fontWeight: "bold",
     fontSize: 20,
     color: "white",
-    fontFamily: "Nunito-SemiBold",
+    fontFamily: "Nunito-Bold",
   },
   timer: {
     fontSize: 20,

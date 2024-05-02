@@ -39,8 +39,9 @@ const ChangePasswordScreen = ({ navigation }) => {
       setPrevPass("");
       setNewPass("");
       setConfirmPass("");
-      supabase.auth.signOut();
-      Alert.alert("Password has successfuully changed!");
+      const { error } = await supabase.auth.signOut();
+      if (error) return Alert.alert(error.message);
+      return Alert.alert("Your password has been changed");
     }
   }
 
