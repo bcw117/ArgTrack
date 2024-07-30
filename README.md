@@ -1,6 +1,11 @@
 # ArgTrack
 Your personal argument tracker that helps solve conflicts and strengthen relationships
 
+## Overview
+- **Monitor how much time has passed since your last argument**
+- **Record the date and reasons for your arguments**
+- **Review your different arguments and find common patterns**
+
 ## Installation and Setup
 1. Clone the repository by opening your terminal and using the command below:
 
